@@ -1,6 +1,7 @@
 import express, { Request, Response, NextFunction } from 'express';
-const cors = require("cors");
-require ("dotenv").config();
+import cors from "cors";
+import dotenv from 'dotenv';
+dotenv.config();
 import { signUpRouter } from './routes/signUp';
 const app = express();
 

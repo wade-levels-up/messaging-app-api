@@ -24,6 +24,7 @@
     "typescript": "^5.8.3"
   },
   "devDependencies": {
+    "@types/cors": "^2.8.18",
     "prisma": "^6.9.0",
     "ts-node-dev": "^2.0.0"
   }

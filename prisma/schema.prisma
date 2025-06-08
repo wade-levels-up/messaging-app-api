@@ -18,7 +18,6 @@ model User {
   username      String         @unique
   password      String
   email         String         @unique
-  firstName     String
   joined        DateTime       @default(now())
   friends       User[]         @relation("UserFriends")
   friendsOf     User[]         @relation("UserFriends")

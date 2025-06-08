@@ -3,6 +3,6 @@ import { signUp } from '../controllers/signUpController';
 
 const signUpRouter = Router();
 
-signUpRouter.get("/", signUp);
+signUpRouter.post("/", ...signUp);
 
 export { signUpRouter };

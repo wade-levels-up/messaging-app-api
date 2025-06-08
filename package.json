@@ -14,7 +14,7 @@
     "@prisma/client": "^6.9.0",
     "@types/express": "^5.0.2",
     "@types/node": "^22.15.29",
-    "bcrypt": "^6.0.0",
+    "bcryptjs": "^3.0.2",
     "cors": "^2.8.5",
     "date-fns": "^4.1.0",
     "dotenv": "^16.5.0",

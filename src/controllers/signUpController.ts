@@ -3,6 +3,8 @@ import asyncHandler from 'express-async-handler';
 import executeWithPrisma from '../utils/executeWithPrisma';
 import { validationResult } from "express-validator";
 import { validateUsername, validateEmail, validatePassword } from '../validators/signUpValidators';
+import { sendVerificationEmail } from '../utils/sendEmail';
+import crypto from 'crypto';
 
 interface SignUpBody {
   email: string;
@@ -46,11 +48,15 @@ export const signUp = [
                 return;
             }
 
+            const verificationToken = crypto.randomBytes(32).toString('hex');
+
             await executeWithPrisma(async (prisma) => {
                 await prisma.user.create({
-                    data: { username, email, password }
+                    data: { username, email, password, verificationToken }
                 })
             })
+
+            await sendVerificationEmail(email, verificationToken);
 
             res.status(201).json({ message: "User created successfully" });
         } catch(error) {

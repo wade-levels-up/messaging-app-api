@@ -1,4 +1,6 @@
 import nodemailer from 'nodemailer';
+import path from 'path';
+import verificationEmail from '../emailTemplates/verificationEmail'
 
 export async function sendVerificationEmail(to: string, verificationToken: string) {
     try {
@@ -18,11 +20,15 @@ export async function sendVerificationEmail(to: string, verificationToken: strin
         from: '"Budding Messenger" <budding.messenger@gmail.com>',
         to,
         subject: 'Verify your email address',
-        html: `<p>Click the link below to verify your email address:</p>
-             <a href="${verificationLink}">${verificationLink}</a>`,
+        html: verificationEmail('Budding Messenger', verificationLink),
+        attachments: [
+            {
+            filename: 'business-logo.gif',
+            path: path.join(__dirname, '../../public/business-logo.gif'),
+            cid: 'businesslogo'
+            }
+        ]
     });
-
-    console.log(`Sent email to: ${to}`);
 
     } catch(error) {
         if (error instanceof Error) {

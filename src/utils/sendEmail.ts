@@ -14,7 +14,7 @@ export async function sendVerificationEmail(to: string, verificationToken: strin
         },
     });
 
-  const verificationLink = `${process.env.CLIENT}/verify-email?token=${verificationToken}`;
+  const verificationLink = `${process.env.CLIENT}/verify-user?token=${verificationToken}`;
 
     await transporter.sendMail({
         from: '"Budding Messenger" <budding.messenger@gmail.com>',

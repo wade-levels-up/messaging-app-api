@@ -24,7 +24,7 @@ model User {
   conversations     Conversation[] @relation("UserConversations")
   messages          Message[]
   verified          Boolean        @default(false)
-  verificationToken String
+  verificationToken String         @unique
 }
 
 model Conversation {

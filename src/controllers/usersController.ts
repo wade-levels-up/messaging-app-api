@@ -70,3 +70,22 @@ export const signUp = [
         }    
     })
 ];
+
+export const verifyUser = asyncHandler(async (req: Request, res: Response) => {
+    try {
+        await executeWithPrisma(async (prisma) => {
+            await prisma.user.update({
+                data: { verified: true },
+                where: { verificationToken: String(req.query.token) }
+            })
+        })
+
+        res.status(200).json({ message: "Email verified successfully." });
+    } catch(error) {
+        if (error instanceof Error) {
+            throw new Error(error.message);
+        } else {
+            throw new Error(String(error));
+        }
+    }
+});

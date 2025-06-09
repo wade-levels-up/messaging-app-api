@@ -3,6 +3,7 @@ import cors from "cors";
 import dotenv from 'dotenv';
 dotenv.config();
 import { signUpRouter } from './routes/signUp';
+import { verifyUserRouter } from './routes/verifyUser';
 const app = express();
 
 // Server Configuration
@@ -19,6 +20,7 @@ app.use(express.urlencoded({ extended: false }));
 // Routes
 
 app.use('/signup', signUpRouter);
+app.use('/verify-user', verifyUserRouter);
 
 app.get('/', (req: Request, res: Response) => {
     res.send("Hello, TypeScript + Node.js!");

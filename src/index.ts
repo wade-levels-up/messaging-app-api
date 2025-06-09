@@ -1,4 +1,5 @@
 import express, { Request, Response, NextFunction } from 'express';
+import prisma from './utils/prismaClient';
 import cors from "cors";
 import dotenv from 'dotenv';
 dotenv.config();
@@ -22,10 +23,6 @@ app.use(express.urlencoded({ extended: false }));
 app.use('/signup', signUpRouter);
 app.use('/verify-user', verifyUserRouter);
 
-app.get('/', (req: Request, res: Response) => {
-    res.send("Hello, TypeScript + Node.js!");
-});
-
 // Error Handling
 
 app.use((error: any, req: Request, res: Response, next:NextFunction) => {
@@ -37,3 +34,16 @@ app.use((error: any, req: Request, res: Response, next:NextFunction) => {
 
 const PORT: number = Number(process.env.PORT) || 3000;
 app.listen(PORT, () => { console.log(`Server is running on http://localhost:${PORT}`)});
+
+
+// Shutdown handlers
+
+process.on('SIGINT', async () => {
+  await prisma.$disconnect();
+  process.exit(0);
+});
+
+process.on('SIGTERM', async () => {
+  await prisma.$disconnect();
+  process.exit(0);
+});

@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
+import { handleControllerError } from '../utils/handleError';
 import asyncHandler from 'express-async-handler';
-import executeWithPrisma from '../utils/executeWithPrisma';
+import prisma from '../utils/prismaClient';
 import { validationResult } from "express-validator";
 import { validateUsername, validateEmail, validatePassword } from '../validators/signUpValidators';
 import { sendVerificationEmail } from '../utils/sendEmail';
@@ -32,8 +33,7 @@ export const signUp = [
 
             const { username, email, password } = req.body
 
-            const existingUser = await executeWithPrisma(async (prisma) => {
-                return prisma.user.findFirst({
+            const existingUser = await prisma.user.findFirst({
                     where: {
                         OR: [
                             { email },
@@ -41,8 +41,6 @@ export const signUp = [
                         ]
                     }
                 });
-            });
-
 
             if (existingUser) {
                 res.status(400).json({ message: "A user with this email or username already exists." });
@@ -52,40 +50,29 @@ export const signUp = [
             const verificationToken = crypto.randomBytes(32).toString('hex');
             const hashedPassword: string = await bcrypt.hash(password, 10);
 
-            await executeWithPrisma(async (prisma) => {
-                await prisma.user.create({
-                    data: { username, email, password: hashedPassword, verificationToken }
-                })
+            await prisma.user.create({
+                data: { username, email, password: hashedPassword, verificationToken }
             })
-
+        
             await sendVerificationEmail(email, verificationToken);
 
             res.status(201).json({ message: "User created successfully" });
         } catch(error) {
-            if (error instanceof Error) {
-                throw new Error(error.message);
-            } else {
-                throw new Error(String(error));
-            }
+            handleControllerError(error);
         }    
     })
 ];
 
 export const verifyUser = asyncHandler(async (req: Request, res: Response) => {
     try {
-        await executeWithPrisma(async (prisma) => {
-            await prisma.user.update({
-                data: { verified: true },
-                where: { verificationToken: String(req.query.token) }
-            })
+        await prisma.user.update({
+            data: { verified: true },
+            where: { verificationToken: String(req.query.token) }
         })
+  
 
         res.status(200).json({ message: "Email verified successfully." });
     } catch(error) {
-        if (error instanceof Error) {
-            throw new Error(error.message);
-        } else {
-            throw new Error(String(error));
-        }
+        handleControllerError(error);
     }
 });

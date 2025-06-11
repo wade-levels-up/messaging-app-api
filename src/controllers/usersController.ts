@@ -1,9 +1,8 @@
 import { Request, Response } from 'express';
-import { handleControllerError } from '../utils/handleError';
+import { handleError } from '../utils/handleError';
 import asyncHandler from 'express-async-handler';
 import prisma from '../utils/prismaClient';
 import { PrismaClient } from '@prisma/client';
-import { validationResult } from "express-validator";
 import { validateUsername, validateEmail, validatePassword } from '../validators/signUpValidators';
 import { handleValidationError } from '../utils/handleValidationError';
 import { sendVerificationEmail } from '../utils/sendEmail';
@@ -48,7 +47,7 @@ export const signUp = [
 
             res.status(201).json({ message: "User created successfully" });
         } catch(error) {
-            handleControllerError(error);
+            handleError(error);
         }    
     })
 ];
@@ -66,6 +65,6 @@ export const verifyUser = asyncHandler(async (req: Request, res: Response) => {
         await verifyUserByToken(prisma, String(req.query.token));
         res.status(200).json({ message: "Email verified successfully." });
     } catch(error) {
-        handleControllerError(error);
+        handleError(error);
     }
 });

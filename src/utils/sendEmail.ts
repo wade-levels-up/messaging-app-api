@@ -1,6 +1,7 @@
 import nodemailer from 'nodemailer';
 import path from 'path';
 import verificationEmail from '../emailTemplates/verificationEmail'
+import { handleError } from './handleError';
 
 export async function sendVerificationEmail(to: string, verificationToken: string) {
     try {
@@ -31,10 +32,6 @@ export async function sendVerificationEmail(to: string, verificationToken: strin
     });
 
     } catch(error) {
-        if (error instanceof Error) {
-            throw new Error(error.message);
-        } else {
-            throw new Error(String(error));
-        }
+        handleError(error);
     }
 }

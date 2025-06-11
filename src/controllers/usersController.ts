@@ -2,11 +2,14 @@ import { Request, Response } from 'express';
 import { handleControllerError } from '../utils/handleError';
 import asyncHandler from 'express-async-handler';
 import prisma from '../utils/prismaClient';
+import { PrismaClient } from '@prisma/client';
 import { validationResult } from "express-validator";
 import { validateUsername, validateEmail, validatePassword } from '../validators/signUpValidators';
 import { sendVerificationEmail } from '../utils/sendEmail';
 import crypto from 'crypto';
 import bcrypt from "bcryptjs";
+
+
 
 interface SignUpBody {
   email: string;
@@ -63,14 +66,17 @@ export const signUp = [
     })
 ];
 
+
+export async function verifyUserByToken(prismaClient: PrismaClient, token: string) {
+    return prismaClient.user.update({
+        data: { verified: true },
+        where: { verificationToken: token }
+    });
+}
+
 export const verifyUser = asyncHandler(async (req: Request, res: Response) => {
     try {
-        await prisma.user.update({
-            data: { verified: true },
-            where: { verificationToken: String(req.query.token) }
-        })
-  
-
+        await verifyUserByToken(prisma, String(req.query.token));
         res.status(200).json({ message: "Email verified successfully." });
     } catch(error) {
         handleControllerError(error);

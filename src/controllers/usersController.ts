@@ -5,6 +5,7 @@ import prisma from '../utils/prismaClient';
 import { PrismaClient } from '@prisma/client';
 import { validationResult } from "express-validator";
 import { validateUsername, validateEmail, validatePassword } from '../validators/signUpValidators';
+import { handleValidationError } from '../utils/handleValidationError';
 import { sendVerificationEmail } from '../utils/sendEmail';
 import crypto from 'crypto';
 import bcrypt from "bcryptjs";
@@ -23,26 +24,12 @@ export const signUp = [
     validatePassword,
     asyncHandler(async (req: Request<{}, {}, SignUpBody>, res: Response) => {
         try {
-            const errors = validationResult(req);
-            if (!errors.isEmpty()) {
-                let errorMessageArray: string[] = [];
-                let errorMessage: string;
-                errors.array().forEach((error) => {
-                    errorMessageArray.push(error.msg);
-                });
-                errorMessage = errorMessageArray.join(", ");
-                throw new Error(errorMessage);
-            }
+            handleValidationError(req)
 
             const { username, email, password } = req.body
 
             const existingUser = await prisma.user.findFirst({
-                    where: {
-                        OR: [
-                            { email },
-                            { username }
-                        ]
-                    }
+                    where: { OR: [{ email }, { username }] }
                 });
 
             if (existingUser) {

@@ -1,24 +1,36 @@
-// Integration (API/Route) Tests
-
 import supertest from "supertest";
 import express from "express";
 import { signUpRouter } from "../src/routes/signUp"
 import prisma from "../src/utils/prismaClient";
 
-// Mock email sending
-jest.mock("../src/utils/sendEmail", () => ({
-  sendVerificationEmail: jest.fn().mockResolvedValue(undefined),
-}));
-
 const app = express();
 app.use(express.urlencoded({ extended: false }));
 app.use("/signup", signUpRouter);
 
-// Delete all users before each test is run
 
 beforeEach(async () => {
   await prisma.user.deleteMany({});
+  await prisma.user.createMany({
+    data: [
+      { 
+        username: "JohnDoe", email: "johndoe@testmail.com", password: "SuperSecret11", 
+        verificationToken: "testToken1", verified: true
+      },
+      { 
+        username: "UnverifiedUser", email: "unverified@testmail.com", password: "SuperSecret12", 
+        verificationToken: "testToken2", verified: false
+      }
+    ]
+  })
 });
+
+afterAll(async () => {
+  await prisma.$disconnect();
+});
+
+jest.mock("../src/utils/sendEmail", () => ({
+  sendVerificationEmail: jest.fn().mockResolvedValue(undefined),
+}));
 
 // Tests
 
@@ -43,7 +55,35 @@ test("sign up throws an error for a duplicate user", async () => {
     .post("/signup")
     .type("form")
     .send({ email: 'janedoe@testmail.com', username: "JaneDoe", password: "SuperSecret10"})
-    .expect(400)
-    .expect({ message: "A user with this email or username already exists." });
+    .expect("Content-Type", /json/)
+    .expect({ message: "A user with this email or username already exists." })
+    .expect(400);
 }, 15000);
+
+test("Successful sign in provides web token", async () => {
+  const response = await supertest(app)
+    .post("/signin")
+    .type("form")
+    .send({ username: "JohnDoe", password: "SuperSecret11"})
+    .expect("Content-Type", /json/)
+    .expect(200);
+
+  expect(response.body).toHaveProperty("message", "sign in successful");
+  expect(response.body).toHaveProperty("token");
+  expect(typeof response.body.token).toBe("string");
+  expect(response.body.token.length).toBeGreaterThan(0);
+});
+
+test("Unsuccessful sign in sends 401 status and json message", async () => {
+  const response = await supertest(app)
+    .post("/signin")
+    .type("form")
+    .send({ username: "UnverifiedUser", password: "SuperSecret12"})
+    .expect("Content-Type", /json/)
+    .expect({ message: "Unverified account. Please verify your account via the link sent to your email" })
+    .expect(401);
+  
+  expect(response.body.token).toBeUndefined();
+});
+
 

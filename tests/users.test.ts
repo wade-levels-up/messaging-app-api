@@ -2,6 +2,8 @@ import supertest from "supertest";
 import express from "express";
 import { signUpRouter } from "../src/routes/signUp"
 import { signInRouter } from "../src/routes/signIn"
+import { verifyUserRouter } from "../src/routes/verifyUser"
+import { dashboardRouter } from "../src/routes/dashboard"
 import prisma from "../src/utils/prismaClient";
 import bcrypt from "bcryptjs";
 
@@ -10,8 +12,10 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-app.use("/signup", signUpRouter);
-app.use("/signin", signInRouter);
+app.use('/signup', signUpRouter);
+app.use('/signin', signInRouter);
+app.use('/verify-user', verifyUserRouter);
+app.use('/dashboard', dashboardRouter);
 
 beforeEach(async () => {
   await prisma.user.deleteMany({});

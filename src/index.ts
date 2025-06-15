@@ -6,6 +6,7 @@ dotenv.config();
 import { signUpRouter } from './routes/signUp';
 import { signInRouter } from './routes/signIn';
 import { verifyUserRouter } from './routes/verifyUser';
+import { dashboardRouter } from './routes/dashboard';
 const app = express();
 
 // Server Configuration
@@ -24,6 +25,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use('/signup', signUpRouter);
 app.use('/signin', signInRouter);
 app.use('/verify-user', verifyUserRouter);
+app.use('/dashbord', dashboardRouter)
 
 // Error Handling
 

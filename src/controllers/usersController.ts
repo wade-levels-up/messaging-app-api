@@ -81,7 +81,6 @@ interface SignInBody {
 
 export const signIn = asyncHandler(async (req: Request<{}, {}, SignInBody>, res: Response) => {
         try {
-            handleValidationError(req)
 
             const { email, password } = req.body
             const user = await prisma.user.findUnique({ where: { email } })
@@ -108,6 +107,21 @@ export const signIn = asyncHandler(async (req: Request<{}, {}, SignInBody>, res:
                 }
                 res.status(200).json({ message: "sign in successful", token });
             })
+
+        } catch(error) {
+            handleError(error);
+        }    
+})
+
+
+
+export const getUserData = asyncHandler(async (req: Request, res: Response) => {
+        try {
+            if (!req.headers['authorization']) {
+                res.status(401).json({ message: "No token provided" });
+                return
+            }
+
 
         } catch(error) {
             handleError(error);

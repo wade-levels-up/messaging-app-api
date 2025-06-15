@@ -117,12 +117,7 @@ export const signIn = asyncHandler(async (req: Request<{}, {}, SignInBody>, res:
 
 export const getUserData = asyncHandler(async (req: Request, res: Response) => {
         try {
-            if (!req.headers['authorization']) {
-                res.status(401).json({ message: "No token provided" });
-                return
-            }
-
-
+            res.status(200).json({ message: "Welcome to your dashboard" });
         } catch(error) {
             handleError(error);
         }    

@@ -136,4 +136,20 @@ test("Accessing /dashboard with invalid token returns 401", async () => {
     .expect(401);
 })
 
+test("Accessing /dashboard with valid token returns 200 and dashboard data", async () => {
+  const signInRes = await supertest(app)
+    .post("/signin")
+    .type("form")
+    .send({ email: "johndoe@testmail.com", password: "SuperSecret11" })
+    .expect(200);
+
+  const token = signInRes.body.token;
+
+  await supertest(app)
+    .get("/dashboard")
+    .set("Authorization", `Bearer ${token}`)
+    .expect("Content-Type", /json/)
+    .expect(200);
+});
+
 

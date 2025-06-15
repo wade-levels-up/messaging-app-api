@@ -127,4 +127,13 @@ test("Accessing /dashboard without token returns 401", async () => {
     .expect(401);
 })
 
+test("Accessing /dashboard with invalid token returns 401", async () => {
+  await supertest(app)
+    .get("/dashboard")
+    .set("Authorization", "Bearer invalidtoken")
+    .expect("Content-Type", /json/)
+    .expect({ message: "Invalid or expired token" })
+    .expect(401);
+})
+
 

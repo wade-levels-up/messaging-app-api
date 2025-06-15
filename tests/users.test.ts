@@ -3,6 +3,7 @@ import express from "express";
 import { signUpRouter } from "../src/routes/signUp"
 import { signInRouter } from "../src/routes/signIn"
 import prisma from "../src/utils/prismaClient";
+import bcrypt from "bcryptjs";
 
 const app = express();
 
@@ -17,11 +18,11 @@ beforeEach(async () => {
   await prisma.user.createMany({
     data: [
       { 
-        username: "JohnDoe", email: "johndoe@testmail.com", password: "SuperSecret11", 
+        username: "JohnDoe", email: "johndoe@testmail.com", password: await bcrypt.hash("SuperSecret11", 10), 
         verificationToken: "testToken1", verified: true
       },
       { 
-        username: "UnverifiedUser", email: "unverified@testmail.com", password: "SuperSecret12", 
+        username: "UnverifiedUser", email: "unverified@testmail.com", password: await bcrypt.hash("SuperSecret12", 10), 
         verificationToken: "testToken2", verified: false
       }
     ]
@@ -78,13 +79,25 @@ test("Successful sign in provides web token", async () => {
   expect(response.body.token.length).toBeGreaterThan(0);
 });
 
-test("Unsuccessful sign in sends 401 status and json message", async () => {
+test("Unverified user sign in sends 401 status and json message", async () => {
   const response = await supertest(app)
     .post("/signin")
     .type("form")
-    .send({ username: "UnverifiedUser", password: "SuperSecret12"})
+    .send({ email: "unverified@testmail.com", password: "SuperSecret12"})
     .expect("Content-Type", /json/)
     .expect({ message: "Unverified account. Please verify your account via the link sent to your email" })
+    .expect(401);
+  
+  expect(response.body.token).toBeUndefined();
+}, 15000);
+
+test("Incorrect password on sign in sends 401 status and json message", async () => {
+  const response = await supertest(app)
+    .post("/signin")
+    .type("form")
+    .send({ email: "johndoe@testmail.com", password: "wrongpassword"})
+    .expect("Content-Type", /json/)
+    .expect({ message: "Invalid password" })
     .expect(401);
   
   expect(response.body.token).toBeUndefined();

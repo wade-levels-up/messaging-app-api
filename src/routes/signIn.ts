@@ -3,6 +3,6 @@ import { signIn } from '../controllers/usersController';
 
 const signInRouter = Router();
 
-signInRouter.post("/", ...signIn);
+signInRouter.post("/", signIn);
 
 export { signInRouter };

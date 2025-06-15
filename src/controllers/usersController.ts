@@ -76,24 +76,31 @@ interface SignInBody {
   password: string;
 }
 
-export const signIn = [
-    validateEmail,
-    validatePassword,
-    asyncHandler(async (req: Request<{}, {}, SignInBody>, res: Response) => {
+export const signIn = asyncHandler(async (req: Request<{}, {}, SignInBody>, res: Response) => {
         try {
             handleValidationError(req)
- 
+
             const { email, password } = req.body
-            console.log(email);
             const user = await prisma.user.findUnique({ where: { email } })
             if (!user) {
                 res.status(404).json({ message: "Invalid email address. No user found" });
-                return;
-            } 
+                return
+            }
+        
+            if (!user.verified) {
+                res.status(401).json({ message: "Unverified account. Please verify your account via the link sent to your email" });
+                return
+            }
+
+    
+            const passwordsMatch = await bcrypt.compare(password, user.password)
+            if (!passwordsMatch) {
+                res.status(401).json({ message: "Invalid password" });
+                return
+            }
 
             res.status(201).json({ message: "User created successfully" });
         } catch(error) {
             handleError(error);
         }    
-    })
-];
+})

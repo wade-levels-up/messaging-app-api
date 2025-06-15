@@ -69,7 +69,7 @@ test("Successful sign in provides web token", async () => {
   const response = await supertest(app)
     .post("/signin")
     .type("form")
-    .send({ username: "JohnDoe", password: "SuperSecret11"})
+    .send({ email: "johndoe@testmail.com", password: "SuperSecret11"})
     .expect("Content-Type", /json/)
     .expect(200);
 

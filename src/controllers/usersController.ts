@@ -6,8 +6,11 @@ import { PrismaClient } from '@prisma/client';
 import { validateUsername, validateEmail, validatePassword } from '../validators/signUpValidators';
 import { handleValidationError } from '../utils/handleValidationError';
 import { sendVerificationEmail } from '../utils/sendEmail';
+import dotenv from 'dotenv';
+dotenv.config();
 import crypto from 'crypto';
 import bcrypt from "bcryptjs";
+import { default as jwt } from 'jsonwebtoken';
 
 
 
@@ -92,14 +95,20 @@ export const signIn = asyncHandler(async (req: Request<{}, {}, SignInBody>, res:
                 return
             }
 
-    
             const passwordsMatch = await bcrypt.compare(password, user.password)
             if (!passwordsMatch) {
                 res.status(401).json({ message: "Invalid password" });
                 return
             }
 
-            res.status(201).json({ message: "User created successfully" });
+            jwt.sign({ user }, process.env.JWT_SECRET_KEY!, { expiresIn: '5 minutes'}, (error, token) => {
+                if (error || !token) {
+                    res.status(500).json({ message: "Failed to generate token" });
+                    return;
+                }
+                res.status(200).json({ message: "sign in successful", token });
+            })
+
         } catch(error) {
             handleError(error);
         }    

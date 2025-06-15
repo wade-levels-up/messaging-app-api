@@ -4,6 +4,7 @@ import cors from "cors";
 import dotenv from 'dotenv';
 dotenv.config();
 import { signUpRouter } from './routes/signUp';
+import { signInRouter } from './routes/signIn';
 import { verifyUserRouter } from './routes/verifyUser';
 const app = express();
 
@@ -21,6 +22,7 @@ app.use(express.urlencoded({ extended: false }));
 // Routes
 
 app.use('/signup', signUpRouter);
+app.use('/signin', signInRouter);
 app.use('/verify-user', verifyUserRouter);
 
 // Error Handling

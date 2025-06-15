@@ -1,12 +1,16 @@
 import supertest from "supertest";
 import express from "express";
 import { signUpRouter } from "../src/routes/signUp"
+import { signInRouter } from "../src/routes/signIn"
 import prisma from "../src/utils/prismaClient";
 
 const app = express();
-app.use(express.urlencoded({ extended: false }));
-app.use("/signup", signUpRouter);
 
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+
+app.use("/signup", signUpRouter);
+app.use("/signin", signInRouter);
 
 beforeEach(async () => {
   await prisma.user.deleteMany({});
@@ -82,6 +86,18 @@ test("Unsuccessful sign in sends 401 status and json message", async () => {
     .expect("Content-Type", /json/)
     .expect({ message: "Unverified account. Please verify your account via the link sent to your email" })
     .expect(401);
+  
+  expect(response.body.token).toBeUndefined();
+}, 15000);
+
+test("Sign in with invalid username sends 404 error and message", async () => {
+  const response = await supertest(app)
+    .post("/signin")
+    .type("form")
+    .send({ email: "not.a.real.user@gmail.com", password: "SuperSecret13"})
+    .expect("Content-Type", /json/)
+    .expect({ message: "Invalid email address. No user found" })
+    .expect(404);
   
   expect(response.body.token).toBeUndefined();
 });

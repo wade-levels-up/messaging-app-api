@@ -68,3 +68,32 @@ export const verifyUser = asyncHandler(async (req: Request, res: Response) => {
         handleError(error);
     }
 });
+
+
+
+interface SignInBody {
+  email: string;
+  password: string;
+}
+
+export const signIn = [
+    validateEmail,
+    validatePassword,
+    asyncHandler(async (req: Request<{}, {}, SignInBody>, res: Response) => {
+        try {
+            handleValidationError(req)
+ 
+            const { email, password } = req.body
+            console.log(email);
+            const user = await prisma.user.findUnique({ where: { email } })
+            if (!user) {
+                res.status(404).json({ message: "Invalid email address. No user found" });
+                return;
+            } 
+
+            res.status(201).json({ message: "User created successfully" });
+        } catch(error) {
+            handleError(error);
+        }    
+    })
+];

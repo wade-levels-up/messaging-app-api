@@ -25,7 +25,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use('/signup', signUpRouter);
 app.use('/signin', signInRouter);
 app.use('/verify-user', verifyUserRouter);
-app.use('/dashbord', dashboardRouter)
+app.use('/dashboard', dashboardRouter)
 
 // Error Handling
 

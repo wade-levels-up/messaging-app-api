@@ -116,9 +116,21 @@ export const signIn = asyncHandler(async (req: Request<{}, {}, SignInBody>, res:
 
 
 export const getUserData = asyncHandler(async (req: Request, res: Response) => {
-        try {
-            res.status(200).json({ message: "Welcome to your dashboard" });
-        } catch(error) {
-            handleError(error);
-        }    
-})
+    try {
+        const user = (req as any).user;
+        const safeUser = user
+            ? {
+                id: user.id,
+                username: user.username,
+                email: user.email,
+            }
+            : null;
+
+        res.status(200).json({ 
+            message: "Welcome to your dashboard",
+            userData: safeUser
+        });
+    } catch(error) {
+        handleError(error);
+    }    
+});

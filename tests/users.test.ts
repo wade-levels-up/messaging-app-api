@@ -115,4 +115,12 @@ test("Sign in with invalid username sends 404 error and message", async () => {
   expect(response.body.token).toBeUndefined();
 });
 
+test("Accessing /dashboard without token returns 401", async () => {
+  await supertest(app)
+    .get("/dashboard")
+    .expect("Content-Type", /json/)
+    .expect({ message: "No token provided" })
+    .expect(401);
+})
+
 

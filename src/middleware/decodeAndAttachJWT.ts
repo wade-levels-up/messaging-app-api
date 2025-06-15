@@ -26,7 +26,7 @@ export function decodeAndAttachJWT(req: Request, res: Response, next:NextFunctio
     const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY!);
 
     if (typeof decoded === "object" && decoded !== null && "user" in decoded) {
-      (req as any).user = (decoded as any).user;
+      (req as any).userId = (decoded as any).user.id;
       next();
     } else {
       res.status(401).json({ message: "Invalid or expired token" });

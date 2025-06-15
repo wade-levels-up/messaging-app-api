@@ -100,7 +100,7 @@ export const signIn = asyncHandler(async (req: Request<{}, {}, SignInBody>, res:
                 return
             }
 
-            jwt.sign({ user }, process.env.JWT_SECRET_KEY!, { expiresIn: '5 minutes'}, (error, token) => {
+            jwt.sign({ userId: user.id }, process.env.JWT_SECRET_KEY!, { expiresIn: '5 minutes'}, (error, token) => {
                 if (error || !token) {
                     res.status(500).json({ message: "Failed to generate token" });
                     return;

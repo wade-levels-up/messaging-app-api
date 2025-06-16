@@ -6,6 +6,7 @@ import { signUpRouter } from './routes/signUp';
 import { signInRouter } from './routes/signIn';
 import { verifyUserRouter } from './routes/verifyUser';
 import { dashboardRouter } from './routes/dashboard';
+import { conversationsRouter } from './routes/conversations';
 
 const app = express();
 
@@ -26,6 +27,7 @@ app.use('/signup', signUpRouter);
 app.use('/signin', signInRouter);
 app.use('/verify-user', verifyUserRouter);
 app.use('/dashboard', dashboardRouter)
+app.use('/conversations', conversationsRouter)
 
 // Error Handling
 

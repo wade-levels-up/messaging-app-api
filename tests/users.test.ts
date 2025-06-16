@@ -1,41 +1,7 @@
 import supertest from "supertest";
-import express from "express";
-import { signUpRouter } from "../src/routes/signUp"
-import { signInRouter } from "../src/routes/signIn"
-import { verifyUserRouter } from "../src/routes/verifyUser"
-import { dashboardRouter } from "../src/routes/dashboard"
-import prisma from "../src/utils/prismaClient";
-import bcrypt from "bcryptjs";
+import { testApp } from "./utils/testApp";
 
-const app = express();
-
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-
-app.use('/signup', signUpRouter);
-app.use('/signin', signInRouter);
-app.use('/verify-user', verifyUserRouter);
-app.use('/dashboard', dashboardRouter);
-
-beforeEach(async () => {
-  await prisma.user.deleteMany({});
-  await prisma.user.createMany({
-    data: [
-      { 
-        username: "JohnDoe", email: "johndoe@testmail.com", password: await bcrypt.hash("SuperSecret11", 10), 
-        verificationToken: "testToken1", verified: true
-      },
-      { 
-        username: "UnverifiedUser", email: "unverified@testmail.com", password: await bcrypt.hash("SuperSecret12", 10), 
-        verificationToken: "testToken2", verified: false
-      }
-    ]
-  })
-});
-
-afterAll(async () => {
-  await prisma.$disconnect();
-});
+// Mocks
 
 jest.mock("../src/utils/sendEmail", () => ({
   sendVerificationEmail: jest.fn().mockResolvedValue(undefined),
@@ -44,7 +10,7 @@ jest.mock("../src/utils/sendEmail", () => ({
 // Tests
 
 test("sign up route works", async () => {
-    await supertest(app)
+    await supertest(testApp)
     .post("/signup")
     .type("form")
     .send({ email: 'janedoe@testmail.com', username: "JaneDoe", password: "SuperSecret10"})
@@ -54,13 +20,13 @@ test("sign up route works", async () => {
 }, 15000);
 
 test("sign up throws an error for a duplicate user", async () => {
-  await supertest(app)
+  await supertest(testApp)
     .post("/signup")
     .type("form")
     .send({ email: 'janedoe@testmail.com', username: "JaneDoe", password: "SuperSecret10"})
     .expect(201);
 
-  await supertest(app)
+  await supertest(testApp)
     .post("/signup")
     .type("form")
     .send({ email: 'janedoe@testmail.com', username: "JaneDoe", password: "SuperSecret10"})
@@ -70,7 +36,7 @@ test("sign up throws an error for a duplicate user", async () => {
 }, 15000);
 
 test("Successful sign in provides web token", async () => {
-  const response = await supertest(app)
+  const response = await supertest(testApp)
     .post("/signin")
     .type("form")
     .send({ email: "johndoe@testmail.com", password: "SuperSecret11"})
@@ -84,7 +50,7 @@ test("Successful sign in provides web token", async () => {
 });
 
 test("Unverified user sign in sends 401 status and json message", async () => {
-  const response = await supertest(app)
+  const response = await supertest(testApp)
     .post("/signin")
     .type("form")
     .send({ email: "unverified@testmail.com", password: "SuperSecret12"})
@@ -96,7 +62,7 @@ test("Unverified user sign in sends 401 status and json message", async () => {
 }, 15000);
 
 test("Incorrect password on sign in sends 401 status and json message", async () => {
-  const response = await supertest(app)
+  const response = await supertest(testApp)
     .post("/signin")
     .type("form")
     .send({ email: "johndoe@testmail.com", password: "wrongpassword"})
@@ -108,7 +74,7 @@ test("Incorrect password on sign in sends 401 status and json message", async ()
 }, 15000);
 
 test("Sign in with invalid username sends 404 error and message", async () => {
-  const response = await supertest(app)
+  const response = await supertest(testApp)
     .post("/signin")
     .type("form")
     .send({ email: "not.a.real.user@gmail.com", password: "SuperSecret13"})
@@ -120,7 +86,7 @@ test("Sign in with invalid username sends 404 error and message", async () => {
 });
 
 test("Accessing /dashboard without token returns 401", async () => {
-  await supertest(app)
+  await supertest(testApp)
     .get("/dashboard")
     .expect("Content-Type", /json/)
     .expect({ message: "No token provided" })
@@ -128,7 +94,7 @@ test("Accessing /dashboard without token returns 401", async () => {
 })
 
 test("Accessing /dashboard with invalid token returns 401", async () => {
-  await supertest(app)
+  await supertest(testApp)
     .get("/dashboard")
     .set("Authorization", "Bearer invalidtoken")
     .expect("Content-Type", /json/)
@@ -137,7 +103,7 @@ test("Accessing /dashboard with invalid token returns 401", async () => {
 })
 
 test("Accessing /dashboard with valid token returns 200 and dashboard data", async () => {
-  const signInRes = await supertest(app)
+  const signInRes = await supertest(testApp)
     .post("/signin")
     .type("form")
     .send({ email: "johndoe@testmail.com", password: "SuperSecret11" })
@@ -145,7 +111,7 @@ test("Accessing /dashboard with valid token returns 200 and dashboard data", asy
 
   const token = signInRes.body.token;
 
-  const response = await supertest(app)
+  const response = await supertest(testApp)
     .get("/dashboard")
     .set("Authorization", `Bearer ${token}`)
     .expect("Content-Type", /json/)

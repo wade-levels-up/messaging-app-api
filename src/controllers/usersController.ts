@@ -118,9 +118,8 @@ export const signIn = asyncHandler(async (req: Request<{}, {}, SignInBody>, res:
 export const getUserData = asyncHandler(async (req: Request, res: Response) => {
     try {
         const user = await prisma.user.findUnique({
-            where: {
-                id: (req as any).userId
-            }
+            where: { id: (req as any).userId },
+            include: { conversations: true }
         });
 
         const safeUser = user
@@ -129,7 +128,8 @@ export const getUserData = asyncHandler(async (req: Request, res: Response) => {
                 username: user.username,
                 email: user.email,
                 joined: user.joined,
-                verified: user.verified
+                verified: user.verified,
+                conversations: user.conversations,
             }
             : null;
 

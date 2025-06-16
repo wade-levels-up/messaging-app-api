@@ -1,38 +1,7 @@
-import express, { Request, Response, NextFunction } from 'express';
 import prisma from './utils/prismaClient';
-import cors from "cors";
 import dotenv from 'dotenv';
 dotenv.config();
-import { signUpRouter } from './routes/signUp';
-import { signInRouter } from './routes/signIn';
-import { verifyUserRouter } from './routes/verifyUser';
-import { dashboardRouter } from './routes/dashboard';
-const app = express();
-
-// Server Configuration
-
-app.use(
-  cors({
-    origin: `${process.env.CLIENT}`,
-  })
-);
-
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-
-// Routes
-
-app.use('/signup', signUpRouter);
-app.use('/signin', signInRouter);
-app.use('/verify-user', verifyUserRouter);
-app.use('/dashboard', dashboardRouter)
-
-// Error Handling
-
-app.use((error: any, req: Request, res: Response, next:NextFunction) => {
-  console.error(error);
-  res.status(error.statusCode || 500).json({ message: error.message });
-});
+import app from './app';
 
 // Run The Server
 
@@ -43,11 +12,13 @@ app.listen(PORT, () => { console.log(`Server is running on http://localhost:${PO
 // Shutdown handlers
 
 process.on('SIGINT', async () => {
+  console.log('SIGINT received. Shutting down gracefully');
   await prisma.$disconnect();
   process.exit(0);
 });
 
 process.on('SIGTERM', async () => {
+  console.log('SIGTERM received. Shutting down gracefully');
   await prisma.$disconnect();
   process.exit(0);
 });

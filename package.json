@@ -7,7 +7,7 @@
     "dev": "NODE_ENV=development && ts-node-dev --respawn src/index.ts",
     "test": "NODE_ENV=test jest",
     "test:watch": "NODE_ENV=test jest --watch",
-    "prisma:migrate": "npx prisma migrate dev"
+    "prisma:migrate": "NODE_ENV=test npx prisma migrate dev && NODE_ENV=development npx prisma migrate dev"
   },
   "author": "",
   "license": "ISC",

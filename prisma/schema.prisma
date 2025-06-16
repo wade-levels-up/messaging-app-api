@@ -28,7 +28,6 @@ model User {
 }
 
 model Conversation {
-  name        String    @unique
   id          Int       @id @default(autoincrement())
   users       User[]    @relation("UserConversations")
   messages    Message[]

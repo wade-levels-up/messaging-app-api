@@ -145,11 +145,13 @@ test("Accessing /dashboard with valid token returns 200 and dashboard data", asy
 
   const token = signInRes.body.token;
 
-  await supertest(app)
+  const response = await supertest(app)
     .get("/dashboard")
     .set("Authorization", `Bearer ${token}`)
     .expect("Content-Type", /json/)
     .expect(200);
+
+  expect(response.body).toHaveProperty("userData");
 });
 
 

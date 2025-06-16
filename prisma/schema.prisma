@@ -28,9 +28,11 @@ model User {
 }
 
 model Conversation {
-  id       Int       @id @default(autoincrement())
-  users    User[]    @relation("UserConversations")
-  messages Message[]
+  id          Int       @id @default(autoincrement())
+  users       User[]    @relation("UserConversations")
+  messages    Message[]
+  lastMessage String?
+  createdAt   DateTime  @default(now())
 }
 
 model Message {
@@ -39,4 +41,5 @@ model Message {
   userId         String
   conversation   Conversation @relation(fields: [conversationId], references: [id])
   conversationId Int
+  createdAt      DateTime     @default(now())
 }

@@ -116,24 +116,34 @@ export const signIn = asyncHandler(async (req: Request<{}, {}, SignInBody>, res:
 
 
 export const getUserData = asyncHandler(async (req: Request, res: Response) => {
-    try {
-        const user = await prisma.user.findUnique({
-            where: { id: (req as any).userId },
-            include: { friends: true, friendsOf: true },
-        });
+    if (req.query.all === 'true') {
+        try {
+            const allUsers = await prisma.user.findMany({})
 
-        const safeUser = user
-            ? {
-                username: user.username,
-                joined: user.joined,
-            }
-            : null;
+            res.status(200).json({ message: "Retrieved all users", allUsers })
+        } catch(error) {
+            handleError(error)
+        }
+    } else {
+        try {
+            const user = await prisma.user.findUnique({
+                where: { id: (req as any).userId },
+                include: { friends: true, friendsOf: true },
+            });
 
-        res.status(200).json({ 
-            message: "Welcome to your dashboard.",
-            userData: safeUser
-        });
-    } catch(error) {
-        handleError(error);
-    }    
+            const safeUser = user
+                ? {
+                    username: user.username,
+                    joined: user.joined,
+                }
+                : null;
+
+            res.status(200).json({ 
+                message: "Welcome to your dashboard.",
+                userData: safeUser
+            });
+        } catch(error) {
+            handleError(error);
+        }    
+    }
 });

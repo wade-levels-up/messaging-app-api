@@ -1,5 +1,6 @@
 import supertest from "supertest";
 import { testApp } from "./utils/testApp";
+import signInUser from "./utils/signInUser";
 
 // Mocks
 
@@ -77,7 +78,7 @@ test("Sign in with invalid username sends 404 error and message", async () => {
   const response = await supertest(testApp)
     .post("/signin")
     .type("form")
-    .send({ email: "not.a.real.user@gmail.com", password: "SuperSecret13"})
+    .send({ email: "not.a.real.user@gmail.com", password: "SuperSecretSauce"})
     .expect("Content-Type", /json/)
     .expect({ message: "Invalid email address. No user found" })
     .expect(404);
@@ -103,11 +104,7 @@ test("Accessing /users with invalid token returns 401", async () => {
 })
 
 test("Accessing /users with valid token returns 200, userData and allUsers", async () => {
-  const signInRes = await supertest(testApp)
-    .post("/signin")
-    .type("form")
-    .send({ email: "johndoe@testmail.com", password: "SuperSecret11" })
-    .expect(200);
+  const signInRes = await signInUser('johndoe@testmail.com', 'SuperSecret11')
 
   const token = signInRes.body.token;
 
@@ -122,11 +119,7 @@ test("Accessing /users with valid token returns 200, userData and allUsers", asy
 });
 
 test("Accessing /users?all=true returns an array of all user's usernames", async () => {
-  const signInRes = await supertest(testApp)
-    .post("/signin")
-    .type("form")
-    .send({ email: "johndoe@testmail.com", password: "SuperSecret11" })
-    .expect(200);
+  const signInRes = await signInUser('johndoe@testmail.com', 'SuperSecret11')
 
   const token = signInRes.body.token;
 
@@ -136,8 +129,12 @@ test("Accessing /users?all=true returns an array of all user's usernames", async
     .expect("Content-Type", /json/)
     .expect(200);
 
-  console.table(response.body)
+  expect(Array.isArray(response.body.allUsers)).toBe(true);
 
-  expect(response.body).toHaveProperty("allUsers");
+  // Check each object has only 'username' property
+  response.body.allUsers.forEach((userObj: any) => {
+    expect(Object.keys(userObj)).toEqual(['username']);
+    expect(typeof userObj.username).toBe('string');
+  });
 });
 

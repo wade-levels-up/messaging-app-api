@@ -35,7 +35,8 @@ beforeEach(async () => {
                     { username: 'JohnDoe' },
                     { username: 'JimDoe'}
                 ]
-            }
+            },
+            lastMessage: 'Test message'
         }
     })
 });

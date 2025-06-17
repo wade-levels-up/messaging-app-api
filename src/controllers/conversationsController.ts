@@ -12,7 +12,12 @@ import { default as jwt } from 'jsonwebtoken';
 
 export const getUserConversations = asyncHandler(async (req: Request, res: Response) => {
     try {
-        res.status(200).json({ message: "User created successfully", conversations: ""});
+        const user = await prisma.user.findUnique({
+            where: { id: (req as any).userId },
+            include: { conversations: true }
+        });
+
+        res.status(200).json({ message: "Conversations retrieved", conversations: user?.conversations});
     } catch(error) {
         handleError(error);
     }    

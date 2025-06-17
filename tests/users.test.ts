@@ -118,7 +118,7 @@ test("Accessing /dashboard with valid token returns 200 and dashboard data", asy
     .expect(200);
 
   expect(response.body).toHaveProperty("userData");
-  expect(response.body.userData).toHaveProperty("conversations");
+  expect(response.body.userData).toHaveProperty("username");
 });
 
 

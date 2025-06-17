@@ -124,12 +124,8 @@ export const getUserData = asyncHandler(async (req: Request, res: Response) => {
 
         const safeUser = user
             ? {
-                id: user.id,
                 username: user.username,
-                email: user.email,
                 joined: user.joined,
-                verified: user.verified,
-                conversations: user.conversations,
             }
             : null;
 

@@ -26,11 +26,30 @@ test("Trying to access conversations without a token throws an error", async () 
         .expect(401)
 })
 
-test("When logged in as John, John can retrieve the test message conversation between himself and Jim", async () => {
+test("When logged in as John, John can retrieve the test message and conversation between himself and Jim", async () => {
     const signInRes = await supertest(testApp)
         .post("/signin")
         .type("form")
         .send({ email: "johndoe@testmail.com", password: "SuperSecret11" })
+
+    const token = signInRes.body.token;
+
+    const response = await supertest(testApp)
+        .get("/conversations")
+        .set("Authorization", `Bearer ${token}`)
+        .expect("Content-Type", /json/)
+        .expect(200);
+
+    expect(response.body).toHaveProperty("conversations")
+    expect(response.body.conversations[0]).toHaveProperty("id")
+    expect(response.body.conversations[0].lastMessage).toEqual('Test message')
+})
+
+test("When logged in as Jim, Jim can retrieve the test message and conversation between himself and John", async () => {
+    const signInRes = await supertest(testApp)
+        .post("/signin")
+        .type("form")
+        .send({ email: "jimdoe@testmail.com", password: "SuperSecret13" })
 
     const token = signInRes.body.token;
 

@@ -40,9 +40,25 @@ test("When logged in as John, John can retrieve the test message conversation be
         .expect("Content-Type", /json/)
         .expect(200);
 
-    console.table(response.body.conversations)
-
     expect(response.body).toHaveProperty("conversations")
     expect(response.body.conversations[0]).toHaveProperty("id")
     expect(response.body.conversations[0].lastMessage).toEqual('Test message')
+})
+
+test("When logged in as Wade, Wade won't have any conversations", async () => {
+    const signInRes = await supertest(testApp)
+        .post("/signin")
+        .type("form")
+        .send({ email: "wadefoz@testmail.com", password: "SuperSecret14" })
+
+    const token = signInRes.body.token;
+
+    const response = await supertest(testApp)
+        .get("/conversations")
+        .set("Authorization", `Bearer ${token}`)
+        .expect("Content-Type", /json/)
+        .expect(200);
+
+    expect(response.body).toHaveProperty("conversations")
+    expect(response.body.conversations).toHaveLength(0);
 })

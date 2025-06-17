@@ -85,24 +85,24 @@ test("Sign in with invalid username sends 404 error and message", async () => {
   expect(response.body.token).toBeUndefined();
 });
 
-test("Accessing /dashboard without token returns 401", async () => {
+test("Accessing /users without token returns 401", async () => {
   await supertest(testApp)
-    .get("/dashboard")
+    .get("/users")
     .expect("Content-Type", /json/)
     .expect({ message: "No token provided" })
     .expect(401);
 })
 
-test("Accessing /dashboard with invalid token returns 401", async () => {
+test("Accessing /users with invalid token returns 401", async () => {
   await supertest(testApp)
-    .get("/dashboard")
+    .get("/users")
     .set("Authorization", "Bearer invalidtoken")
     .expect("Content-Type", /json/)
     .expect({ message: "Invalid or expired token" })
     .expect(401);
 })
 
-test("Accessing /dashboard with valid token returns 200 and dashboard data", async () => {
+test("Accessing /users with valid token returns 200, userData and allUsers", async () => {
   const signInRes = await supertest(testApp)
     .post("/signin")
     .type("form")
@@ -112,7 +112,7 @@ test("Accessing /dashboard with valid token returns 200 and dashboard data", asy
   const token = signInRes.body.token;
 
   const response = await supertest(testApp)
-    .get("/dashboard")
+    .get("/users")
     .set("Authorization", `Bearer ${token}`)
     .expect("Content-Type", /json/)
     .expect(200);
@@ -121,4 +121,23 @@ test("Accessing /dashboard with valid token returns 200 and dashboard data", asy
   expect(response.body.userData).toHaveProperty("username");
 });
 
+test("Accessing /users?all=true returns an array of all user's usernames", async () => {
+  const signInRes = await supertest(testApp)
+    .post("/signin")
+    .type("form")
+    .send({ email: "johndoe@testmail.com", password: "SuperSecret11" })
+    .expect(200);
+
+  const token = signInRes.body.token;
+
+  const response = await supertest(testApp)
+    .get("/users?all=true")
+    .set("Authorization", `Bearer ${token}`)
+    .expect("Content-Type", /json/)
+    .expect(200);
+
+  console.table(response.body)
+
+  expect(response.body).toHaveProperty("allUsers");
+});
 

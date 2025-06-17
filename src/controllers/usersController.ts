@@ -119,7 +119,7 @@ export const getUserData = asyncHandler(async (req: Request, res: Response) => {
     try {
         const user = await prisma.user.findUnique({
             where: { id: (req as any).userId },
-            include: { conversations: true }
+            include: { friends: true, friendsOf: true },
         });
 
         const safeUser = user

@@ -5,7 +5,7 @@ dotenv.config();
 import { signUpRouter } from './routes/signUp';
 import { signInRouter } from './routes/signIn';
 import { verifyUserRouter } from './routes/verifyUser';
-import { dashboardRouter } from './routes/dashboard';
+import { usersRouter } from './routes/users';
 import { conversationsRouter } from './routes/conversations';
 
 const app = express();
@@ -26,7 +26,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use('/signup', signUpRouter);
 app.use('/signin', signInRouter);
 app.use('/verify-user', verifyUserRouter);
-app.use('/dashboard', dashboardRouter)
+app.use('/users', usersRouter)
 app.use('/conversations', conversationsRouter)
 
 // Error Handling

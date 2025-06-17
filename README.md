@@ -3,7 +3,7 @@
 ## Overview
 
 **user-server-api** is a secure RESTful API for applications utilizing sign-up, sign-in and access to protected routes for users, built with Node.js, Express, TypeScript, and PostgreSQL (via Prisma ORM).  
-It provides endpoints for user registration, authentication (with JWT), email verification, and protected user dashboard access.  
+It provides endpoints for user registration, authentication (with JWT), email verification, and protected user users access.  
 The API is designed with security and scalability in mind, following best practices for password hashing, token-based authentication, and safe data handling.
 
 Key features include:
@@ -74,7 +74,7 @@ Verifies a user's email address using the token sent to their email.
 ---
 
 🐶 **Method:** GET
-**Endpoint:** `/dashboard`
+**Endpoint:** `/users`
 
 **Description:**  
 Retrieves the authenticated user's information.

@@ -2,8 +2,8 @@ import { Router } from 'express';
 import { getUserData } from '../controllers/usersController';
 import { decodeAndAttachJWT } from '../middleware/decodeAndAttachJWT';
 
-const dashboardRouter = Router();
+const usersRouter = Router();
 
-dashboardRouter.get("/", decodeAndAttachJWT, getUserData);
+usersRouter.get("/", decodeAndAttachJWT, getUserData);
 
-export { dashboardRouter };
+export { usersRouter };

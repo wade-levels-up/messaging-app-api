@@ -103,13 +103,13 @@ test("Accessing /users with invalid token returns 401", async () => {
     .expect(401);
 })
 
-test("Accessing /users with valid token returns 200, userData and allUsers", async () => {
+test("Accessing /users/me with valid token returns 200 and users data", async () => {
   const signInRes = await signInUser('johndoe@testmail.com', 'SuperSecret11')
 
   const token = signInRes.body.token;
 
   const response = await supertest(testApp)
-    .get("/users")
+    .get("/users/me")
     .set("Authorization", `Bearer ${token}`)
     .expect("Content-Type", /json/)
     .expect(200);
@@ -118,23 +118,18 @@ test("Accessing /users with valid token returns 200, userData and allUsers", asy
   expect(response.body.userData).toHaveProperty("username");
 });
 
-test("Accessing /users?all=true returns an array of all user's usernames", async () => {
+test("Accessing /users returns an array of all user's usernames, the first of which is JohnDoe", async () => {
   const signInRes = await signInUser('johndoe@testmail.com', 'SuperSecret11')
   
   const token = signInRes.body.token;
 
   const response = await supertest(testApp)
-    .get("/users?all=true")
+    .get("/users")
     .set("Authorization", `Bearer ${token}`)
     .expect("Content-Type", /json/)
     .expect(200);
 
   expect(Array.isArray(response.body.allUsers)).toBe(true);
-
-  // Check each object has only 'username' property
-  response.body.allUsers.forEach((userObj: any) => {
-    expect(Object.keys(userObj)).toEqual(['username']);
-    expect(typeof userObj.username).toBe('string');
-  });
+  expect(response.body.allUsers[0]).toEqual("JohnDoe");
 });
 

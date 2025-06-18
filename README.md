@@ -77,7 +77,7 @@ Verifies a user's email address using the token sent to their email.
 **Endpoint:** `/users`
 
 **Description:**  
-Retrieves the authenticated user's information.
+Retrieves an array of all user's usernames.
 
 **Requires:**
 A valid JWT in the `Authorization` header.
@@ -93,12 +93,18 @@ Authorization: Bearer `(your JWT token)`
 ```json
 {
   "message": "Welcome to your dashboard.",
-  "userData": {
-    "id": "user-id-string",
-    "username": "janedoe",
-    "email": "janedoe@gmail.com",
-    "joined": "2023-01-01T00:00:00.000Z",
-    "verified": true
-  }
+  "allUsers": ["JohnDoe", "JaneDoe", "WadeFoz"]
 }
+```
+
+🐶 **Method:** GET
+**Endpoint:** `/users/me`
+
+**Description:**  
+TO DO
+
+**Request Body:**
+
+```json
+TO DO
 ```

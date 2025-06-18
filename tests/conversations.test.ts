@@ -1,12 +1,10 @@
 import supertest from "supertest";
 import { testApp } from "./utils/testApp";
 import prisma from "../src/utils/prismaClient";
+import signInUser from "./utils/signInUser";
 
 test("User with access token can retrieve conversations", async () => {
-    const signInRes = await supertest(testApp)
-        .post("/signin")
-        .type("form")
-        .send({ email: "johndoe@testmail.com", password: "SuperSecret11" })
+    const signInRes = await signInUser("johndoe@testmail.com", "SuperSecret11")
 
     const token = signInRes.body.token;
 
@@ -27,10 +25,7 @@ test("Trying to access conversations without a token throws an error", async () 
 })
 
 test("When logged in as John, John can retrieve the test message and conversation between himself and Jim", async () => {
-    const signInRes = await supertest(testApp)
-        .post("/signin")
-        .type("form")
-        .send({ email: "johndoe@testmail.com", password: "SuperSecret11" })
+    const signInRes = await signInUser("johndoe@testmail.com", "SuperSecret11")
 
     const token = signInRes.body.token;
 

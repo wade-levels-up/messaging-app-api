@@ -120,7 +120,7 @@ test("Accessing /users with valid token returns 200, userData and allUsers", asy
 
 test("Accessing /users?all=true returns an array of all user's usernames", async () => {
   const signInRes = await signInUser('johndoe@testmail.com', 'SuperSecret11')
-
+  
   const token = signInRes.body.token;
 
   const response = await supertest(testApp)

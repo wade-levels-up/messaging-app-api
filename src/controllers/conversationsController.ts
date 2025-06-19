@@ -18,3 +18,33 @@ export const getUserConversations = asyncHandler(async (req: Request, res: Respo
         handleError(error);
     }    
 })
+
+export const getConversationMessages = asyncHandler(async (req: Request, res: Response) => {
+    try {
+        const user = await prisma.user.findUnique({
+            where: { id: (req as any).userId },
+            include: { conversations: true }
+        });
+
+       let conversationFound = false;
+       user?.conversations.forEach((conversation) => {
+            if (conversation.id === Number(req.params["conversation-id"])) {
+                conversationFound = true;
+            }
+       })
+       if (!conversationFound) {
+        res.status(404).json({ message: "Invalid conversation ID. No Conversation found" });
+        return;
+       }
+
+        const messages = await prisma.conversation.findUnique({
+            where: {
+                id: Number(req.params["conversation-id"])
+            }
+        })
+
+        res.status(200).json({ message: "Conversations retrieved", conversations: messages});
+    } catch(error) {
+        handleError(error);
+    }
+})

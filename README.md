@@ -1,8 +1,8 @@
-# user-server-api
+# messaging-app-api
 
 ## Overview
 
-**user-server-api** is a secure RESTful API for applications utilizing sign-up, sign-in and access to protected routes for users, built with Node.js, Express, TypeScript, and PostgreSQL (via Prisma ORM).  
+**messaging-app-api** is a secure RESTful API for applications utilizing sign-up, sign-in and access to protected routes for users, built with Node.js, Express, TypeScript, and PostgreSQL (via Prisma ORM).  
 It provides endpoints for user registration, authentication (with JWT), email verification, and protected user users access.  
 The API is designed with security and scalability in mind, following best practices for password hashing, token-based authentication, and safe data handling.
 
@@ -92,19 +92,24 @@ Authorization: Bearer `(your JWT token)`
 
 ```json
 {
-  "message": "Welcome to your dashboard.",
+  "message": "Retrieved all users.",
   "allUsers": ["JohnDoe", "JaneDoe", "WadeFoz"]
 }
 ```
+
+---
 
 🐶 **Method:** GET
 **Endpoint:** `/users/me`
 
 **Description:**  
-TO DO
+Retrieves the logged in user's data
 
 **Request Body:**
 
 ```json
-TO DO
+{
+  "message": "Retrieved your user data",
+  "userData": { username, joined }
+}
 ```

@@ -1,6 +1,5 @@
 import supertest from "supertest";
 import { testApp } from "./utils/testApp";
-import prisma from "../src/utils/prismaClient";
 import signInUser from "./utils/signInUser";
 
 test("User with access token can retrieve conversations", async () => {
@@ -41,10 +40,7 @@ test("When logged in as John, John can retrieve the test message and conversatio
 })
 
 test("When logged in as Jim, Jim can retrieve the test message and conversation between himself and John", async () => {
-    const signInRes = await supertest(testApp)
-        .post("/signin")
-        .type("form")
-        .send({ email: "jimdoe@testmail.com", password: "SuperSecret13" })
+    const signInRes = await signInUser("jimdoe@testmail.com", "SuperSecret13")
 
     const token = signInRes.body.token;
 
@@ -60,10 +56,7 @@ test("When logged in as Jim, Jim can retrieve the test message and conversation 
 })
 
 test("When logged in as Wade, Wade won't have any conversations", async () => {
-    const signInRes = await supertest(testApp)
-        .post("/signin")
-        .type("form")
-        .send({ email: "wadefoz@testmail.com", password: "SuperSecret14" })
+    const signInRes = await signInUser("wadefoz@testmail.com", "SuperSecret14")
 
     const token = signInRes.body.token;
 
@@ -76,3 +69,19 @@ test("When logged in as Wade, Wade won't have any conversations", async () => {
     expect(response.body).toHaveProperty("conversations")
     expect(response.body.conversations).toHaveLength(0);
 })
+
+test("Retrieve specific conversation's messages for logged in user", async () => {
+    const signInRes = await signInUser("johndoe@testmail.com", "SuperSecret11")
+
+    const token = signInRes.body.token;
+
+    const response = await supertest(testApp)
+        .get("/conversations/:conversation-id/messages")
+        .set("Authorization", `Bearer ${token}`)
+        .expect("Content-Type", /json/)
+        .expect(200);
+
+    expect(response.body).toHaveProperty("conversationMessages")
+})
+
+

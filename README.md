@@ -113,3 +113,26 @@ Retrieves the logged in user's data
   "userData": { username, joined }
 }
 ```
+
+---
+
+🐶 **Method:** GET
+**Endpoint:** `/conversations/:conversation-id/messages`
+
+**Description:**  
+Retrieves a specific conversation's messages for the logged in user
+
+**Request Body:**
+
+```json
+{
+  "message": "Conversation messages retrieved",
+  "conversationMessages": [
+    {
+      "authorName": "JimDoe",
+      "content": "Good morning!",
+      "createdAt": "17/05/2025"
+    }
+  ]
+}
+```

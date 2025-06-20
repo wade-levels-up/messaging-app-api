@@ -43,6 +43,26 @@ beforeEach(async () => {
             lastMessage: 'Test message'
         }
     })
+
+    const johnDoe = await prisma.user.findUnique({
+        where: {
+            username: "JohnDoe"
+        },
+        include: { conversations: true }
+    })
+
+    if (!johnDoe) {
+        throw new Error("Failed to initialize JohnDoe user for test setup")
+    }
+
+    await prisma.message.create({
+        data: {
+            content: "Good morning!",
+            authorName: String(johnDoe?.username),
+            userId: String(johnDoe?.id),
+            conversationId: Number(johnDoe?.conversations[0].id),
+        }
+    })
 });
 
 afterAll(async () => {

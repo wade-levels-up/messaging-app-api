@@ -75,8 +75,16 @@ test("Retrieve specific conversation's messages for logged in user", async () =>
 
     const token = signInRes.body.token;
 
+    const conversationResponse = await supertest(testApp)
+        .get("/conversations")
+        .set("Authorization", `Bearer ${token}`)
+        .expect("Content-Type", /json/)
+        .expect(200);
+
+    const conversationId = conversationResponse.body.conversations[0].id
+
     const response = await supertest(testApp)
-        .get("/conversations/:conversation-id/messages")
+        .get(`/conversations/${conversationId}/messages`)
         .set("Authorization", `Bearer ${token}`)
         .expect("Content-Type", /json/)
         .expect(200);

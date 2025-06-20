@@ -21,6 +21,8 @@ export const getUserConversations = asyncHandler(async (req: Request, res: Respo
 
 export const getConversationMessages = asyncHandler(async (req: Request, res: Response) => {
     try {
+        console.log('Inside getConversationMessages function')
+
         const user = await prisma.user.findUnique({
             where: { id: (req as any).userId },
             include: { conversations: true }
@@ -32,6 +34,9 @@ export const getConversationMessages = asyncHandler(async (req: Request, res: Re
                 conversationFound = true;
             }
        })
+
+       console.log(`conversation-id param: ${req.params["conversation-id"]}`)
+
        if (!conversationFound) {
         res.status(404).json({ message: "Invalid conversation ID. No Conversation found" });
         return;

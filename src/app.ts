@@ -26,8 +26,13 @@ app.use(express.urlencoded({ extended: false }));
 app.use('/signup', signUpRouter);
 app.use('/signin', signInRouter);
 app.use('/verify-user', verifyUserRouter);
-app.use('/users', usersRouter)
-app.use('/conversations', conversationsRouter)
+app.use('/users', usersRouter);
+app.use('/conversations', conversationsRouter);
+
+app.use((req, res) => {
+  console.log('Missed route:', req.method, req.originalUrl);
+  res.status(404).send('Not found');
+});
 
 // Error Handling
 

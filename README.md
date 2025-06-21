@@ -30,6 +30,7 @@ Note: 👮🏼 Protected Routes require a valid JWT in the `Authorization` heade
 | GET    | /users                                   | 👮🏼 Protected: Retrieves an array of all user's usernames                                                       |
 | GET    | /users/me                                | 👮🏼 Protected: Retrieves the logged in user's data                                                              |
 | GET    | /conversations/:conversation_id/messages | 👮🏼 Protected: Retrieves a specific conversation's messages for the id in the route parameter :conversation_id. |
+| GET    | /friends                                 | 👮🏼 Protected: Retrieves an array of usernames that are friends of the logged in user                           |
 
 ---
 

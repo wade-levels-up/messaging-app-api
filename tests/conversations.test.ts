@@ -90,6 +90,7 @@ test("Retrieve specific conversation's messages for logged in user", async () =>
         .expect(200);
 
     expect(response.body).toHaveProperty("conversationMessages")
+    expect(response.body.conversationMessages[0].content).toBe("Good morning!");
 })
 
 

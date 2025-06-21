@@ -42,6 +42,6 @@ model Message {
   authorName     String
   userId         String
   conversation   Conversation @relation(fields: [conversationId], references: [id])
-  conversationId Int
+  conversationId Int          @unique
   createdAt      DateTime     @default(now())
 }

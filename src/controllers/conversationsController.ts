@@ -30,25 +30,28 @@ export const getConversationMessages = asyncHandler(async (req: Request, res: Re
 
        let conversationFound = false;
        user?.conversations.forEach((conversation) => {
-            if (conversation.id === Number(req.params["conversation-id"])) {
+            if (conversation.id === Number(req.params["conversation_id"])) {
                 conversationFound = true;
             }
        })
 
-       console.log(`conversation-id param: ${req.params["conversation-id"]}`)
+       console.log(`conversation-id param: ${req.params["conversation_id"]}`)
 
        if (!conversationFound) {
         res.status(404).json({ message: "Invalid conversation ID. No Conversation found" });
         return;
        }
 
-        const messages = await prisma.conversation.findUnique({
+        const conversation = await prisma.conversation.findUnique({
             where: {
-                id: Number(req.params["conversation-id"])
-            }
+                id: Number(req.params["conversation_id"])
+            },
+            include: { messages: true }
         })
 
-        res.status(200).json({ message: "Conversations retrieved", conversations: messages});
+        console.log(conversation?.messages);
+
+        res.status(200).json({ message: "Conversations retrieved", conversationMessages: conversation?.messages});
     } catch(error) {
         handleError(error);
     }

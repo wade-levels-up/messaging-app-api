@@ -18,6 +18,23 @@ This API serves as the backend for platforms that enable users to sign-up, sign-
 
 ## API Usage
 
+### Quick Reference Table
+
+Note: 👮🏼 Protected Routes require a valid JWT in the `Authorization` header. A valid JWT is obtained using the /signup and /signin routes.
+
+| Method | Path                                     | Action / Resource                                                                                                                                                                    |
+| ------ | ---------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| POST   | /signup                                  | Creates a new user account                                                                                                                                                           |
+| POST   | /signin                                  | Signs a user into their account and returns a JWT to the browser                                                                                                                     |
+| GET    | /verify-user?token=...                   | Account email verification - Verifies a user's email address using the token sent to their email.                                                                                    |
+| GET    | /users                                   | 👮🏼 Protected: Retrieves an array of all user's usernames                                                                                                                             |
+| GET    | /users/me                                | 👮🏼 Protected: Retrieves the logged in user's data                                                                                                                                    |
+| GET    | /conversations/:conversation_id/messages | 👮🏼 Protected: Retrieves a specific conversation's messages for the conversation specified in the route parameter :conversation_id. The conversation must be related to the user's ID |
+
+---
+
+### Detailed Breakdown
+
 ✍🏻 **Method:** POST
 **Endpoint:** `/signup`
 
@@ -40,7 +57,7 @@ Creates a new user account.
 **Endpoint:** `/signin`
 
 **Description:**  
-Signs a user into their account.
+Signs a user into their account and returns a JWT to the browser
 
 **Request Body:**
 
@@ -105,7 +122,7 @@ Authorization: Bearer `(your JWT token)`
 **Description:**  
 Retrieves the logged in user's data
 
-**Request Body:**
+**Response Body:**
 
 ```json
 {
@@ -117,12 +134,12 @@ Retrieves the logged in user's data
 ---
 
 🐶 **Method:** GET
-**Endpoint:** `/conversations/:conversation-id/messages`
+**Endpoint:** `/conversations/:conversation_id/messages`
 
 **Description:**  
 Retrieves a specific conversation's messages for the logged in user
 
-**Request Body:**
+**Response Body:**
 
 ```json
 {

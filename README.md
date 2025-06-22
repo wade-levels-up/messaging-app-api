@@ -27,6 +27,7 @@ Note: 👮🏼 Protected Routes require a valid JWT in the `Authorization` heade
 | ✅     | POST   | /signup                                  | Creates a new user account                                                                                     |
 | ✅     | POST   | /signin                                  | Signs a user into their account and returns a JWT to the browser                                               |
 | ✅     | POST   | /conversations                           | 👮🏼 Protected: Creates a new conversation between the logged in user and another user                           |
+| ❌     | POST   | /conversations/:conversation_id/messages | 👮🏼 Protected: Creates a new message within a specific conversation from a logged in user                       |
 | ✅     | GET    | /verify-user?token=...                   | Account email verification - Verifies a user's email address using the token sent to their email.              |
 | ✅     | GET    | /users                                   | Retrieves an array of all user's usernames                                                                     |
 | ✅     | GET    | /users/:username                         | Retrieves a specific users data for purpose of displaying a users public profile                               |
@@ -95,7 +96,40 @@ Signs a user into their account and returns a JWT to the browser
 **Endpoint:** `/conversations`
 
 **Description:**  
+Creates a new message within a specific conversation from a logged in user
+
+**Request Headers:**
+
+Authorization: Bearer 'your-jwt-token'
+
+**Request Body:**
+
+```json
+{
+  "content": "JohnDoe",
+  "authorName": "JohnDoe"
+}
+```
+
+**Example Response:**
+
+```json
+{
+  "message": "New conversation started between JohnDoe and JaneDoe"
+}
+```
+
+---
+
+**Method:** POST
+**Endpoint:** `/conversations/:conversation_id/messages`
+
+**Description:**  
 Creates a new conversation between the logged in user and another user
+
+**Request Headers:**
+
+Authorization: Bearer 'your-jwt-token'
 
 **Request Body:**
 
@@ -156,9 +190,7 @@ Verifies a user's email address using the token sent to their email.
 **Description:**  
 Retrieves an array of all user's usernames.
 
-**Success Response:**
-
-- **Status:** 200 OK
+**Response Body:**
 
 ```json
 {
@@ -192,6 +224,10 @@ Retrieves a specific users data for purpose of displaying a users public profile
 **Description:**  
 Retrieves the logged in user's data
 
+**Request Headers:**
+
+Authorization: Bearer 'your-jwt-token'
+
 **Response Body:**
 
 ```json
@@ -208,6 +244,10 @@ Retrieves the logged in user's data
 
 **Description:**  
 Retrieves a specific conversation's messages for the logged in user
+
+**Request Headers:**
+
+Authorization: Bearer 'your-jwt-token'
 
 **Response Body:**
 
@@ -231,6 +271,10 @@ Retrieves a specific conversation's messages for the logged in user
 
 **Description:**  
 Retrieves an array of usernames that are friends of the logged in user
+
+**Request Headers:**
+
+Authorization: Bearer 'your-jwt-token'
 
 **Response Body:**
 

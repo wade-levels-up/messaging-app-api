@@ -310,7 +310,7 @@ Retrieves a specific users friends as an array of usernames
 ---
 
 **Method:** PUT
-**Endpoint:** `/friends`
+**Endpoint:** `/friends/:username`
 
 **Description:**
 

@@ -14,19 +14,13 @@ test("sign up route works", async () => {
     await supertest(testApp)
     .post("/signup")
     .type("form")
-    .send({ email: 'janedoe@testmail.com', username: "JaneDoe", password: "SuperSecret10"})
+    .send({ email: 'jennydoe@testmail.com', username: "JennyDoe", password: "SuperSecret2"})
     .expect("Content-Type", /json/)
     .expect({ message: "User created successfully" })
     .expect(201);
 }, 15000);
 
 test("sign up throws an error for a duplicate user", async () => {
-  await supertest(testApp)
-    .post("/signup")
-    .type("form")
-    .send({ email: 'janedoe@testmail.com', username: "JaneDoe", password: "SuperSecret10"})
-    .expect(201);
-
   await supertest(testApp)
     .post("/signup")
     .type("form")

@@ -35,6 +35,10 @@ beforeEach(async () => {
             username: "wadefoz", email: "wadefoz@testmail.com", password: await bcrypt.hash("SuperSecret14", 10), 
             verificationToken: "testToken4", verified: true
         },
+        {
+            username: "JaneDoe", email: "janedoe@testmail.com", password: await bcrypt.hash("SuperSecret16", 10), 
+            verificationToken: "testToken5", verified: true
+        },
         ]
     });
     

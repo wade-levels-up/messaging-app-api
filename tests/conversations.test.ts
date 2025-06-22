@@ -98,15 +98,16 @@ test("User can create a new conversation between themselves and other users with
     const signInRes = await signInUser("johndoe@testmail.com", "SuperSecret11")
     const token = signInRes.body.token; 
     
-    const usernameOfPersonConversationCreatedWith = 'JaneDoe'
+    const sender = 'JohnDoe'
+    const recipient = 'JaneDoe'
 
     await supertest(testApp)
         .post('/conversations')
         .set("Authorization", `Bearer ${token}`)
         .type("form")
-        .send({ user: usernameOfPersonConversationCreatedWith, openingMessage: 'Hi Jane!' })
+        .send({ sender, recipient, openingMessage: 'Hi Jane!' })
         .expect("Content-Type", /json/)
-        .expect({ message: `New conversation started between JohnDoe and ${usernameOfPersonConversationCreatedWith}` })
+        .expect({ message: `New conversation started between JohnDoe and ${recipient}` })
         .expect(201);
 
     // Retrieve the id of the newly created conversation with Jane
@@ -117,6 +118,7 @@ test("User can create a new conversation between themselves and other users with
         .expect(200);
     const conversationId = conversationResponse.body.conversations[1].id
     
+    // Check to see that a conversation with Jane exists and that our opening message was sent
     const response = await supertest(testApp)
         .get(`/conversations/${conversationId}/messages`)
         .set("Authorization", `Bearer ${token}`)
@@ -124,7 +126,7 @@ test("User can create a new conversation between themselves and other users with
         .expect(200);
 
     expect(response.body).toHaveProperty("conversationMessages")
-    expect(response.body.conversationMessages[0].content).toBe("Hi Jane!");
+    expect(response.body.conversationMessages[0].content ).toBe("Hi Jane!");
 })
 
 

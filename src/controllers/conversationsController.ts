@@ -3,6 +3,7 @@ import { handleError } from '../utils/handleError';
 import asyncHandler from 'express-async-handler';
 import prisma from '../utils/prismaClient';
 import dotenv from 'dotenv';
+import { send } from 'process';
 dotenv.config();
 
 
@@ -49,4 +50,55 @@ export const getConversationMessages = asyncHandler(async (req: Request, res: Re
     } catch(error) {
         handleError(error);
     }
+})
+
+interface NewConversationBody {
+  sender: string;
+  recipient: string;
+  openingMessage: string;
+}
+
+export const createConversation = asyncHandler(async (req: Request<{}, {}, NewConversationBody>, res: Response) => {
+    try {
+        const { sender, recipient, openingMessage } = req.body
+
+        const existingConversation = await prisma.conversation.findFirst({
+            where: {
+                AND: [
+                    { users: { some: { username: sender } } },
+                    { users: { some: { username: recipient } } }
+                ]
+            }
+        });
+
+        if (existingConversation) {
+            res.status(400).json({ message: "Can't create new conversation. Conversation already exists between these users"});
+            return;
+        }
+
+        await prisma.conversation.create({
+            data: {
+                users: {
+                    connect: [
+                        { username: sender},
+                        { username: recipient}
+                    ]
+                },
+                lastMessage: openingMessage,
+                messages: {
+                    create: [
+                        {
+                            content: openingMessage,
+                            authorName: sender,
+                            userId: (req as any).userId,
+                        }
+                    ]
+                }
+            }
+        })
+
+        res.status(201).json({ message: `New conversation started between JohnDoe and ${recipient}` });
+    } catch(error) {
+        handleError(error);
+    }    
 })

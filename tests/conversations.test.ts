@@ -94,7 +94,7 @@ test("Retrieve specific conversation's messages for logged in user", async () =>
     expect(response.body.conversationMessages[0].content).toBe("Good morning!");
 })
 
-test("User can create a new conversation between themselves and other users with an opening message", async () => {
+test("User can create a new conversation with an opening message between themselves and other users", async () => {
     const signInRes = await signInUser("johndoe@testmail.com", "SuperSecret11")
     const token = signInRes.body.token; 
     
@@ -127,6 +127,27 @@ test("User can create a new conversation between themselves and other users with
 
     expect(response.body).toHaveProperty("conversationMessages")
     expect(response.body.conversationMessages[0].content ).toBe("Hi Jane!");
+
+    // Confirm that Jane can also retrieve John's message by repeating the above process
+    const janeSignInRes = await signInUser("janedoe@testmail.com", "SuperSecret16")
+    const janeToken = janeSignInRes.body.token;
+
+    const janeConversationResponse = await supertest(testApp)
+        .get("/conversations")
+        .set("Authorization", `Bearer ${janeToken}`)
+        .expect("Content-Type", /json/)
+        .expect(200);
+    const janeConversationId = janeConversationResponse.body.conversations[0].id
+
+    const janeResponse = await supertest(testApp)
+        .get(`/conversations/${janeConversationId}/messages`)
+        .set("Authorization", `Bearer ${janeToken}`)
+        .expect("Content-Type", /json/)
+        .expect(200);
+
+    expect(janeResponse.body).toHaveProperty("conversationMessages")
+    expect(janeResponse.body.conversationMessages[0].content).toBe("Hi Jane!")
+    expect(janeResponse.body.conversationMessages[0].authorName).toBe("JohnDoe");
 })
 
 

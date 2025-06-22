@@ -27,7 +27,7 @@ Note: 👮🏼 Protected Routes require a valid JWT in the `Authorization` heade
 | ✅     | POST   | /signup                                  | Creates a new user account                                                                                     |
 | ✅     | POST   | /signin                                  | Signs a user into their account and returns a JWT to the browser                                               |
 | ✅     | POST   | /conversations                           | 👮🏼 Protected: Creates a new conversation between the logged in user and another user                           |
-| ❌     | POST   | /conversations/:conversation_id/messages | 👮🏼 Protected: Creates a new message within a specific conversation from a logged in user                       |
+| ✅     | POST   | /conversations/:conversation_id/messages | 👮🏼 Protected: Creates a new message within a specific conversation from a logged in user                       |
 | ✅     | GET    | /verify-user?token=...                   | Account email verification - Verifies a user's email address using the token sent to their email.              |
 | ✅     | GET    | /users                                   | Retrieves an array of all user's usernames                                                                     |
 | ✅     | GET    | /users/:username                         | Retrieves a specific users data for purpose of displaying a users public profile                               |
@@ -46,7 +46,7 @@ Note: 👮🏼 Protected Routes require a valid JWT in the `Authorization` heade
 - ✅ A logged in users data can be retrieved for populating their own profile
 - ✅ Messages can be retrieved for a specific conversation for the logged in user
 - ✅ Users can create new conversations with other users
-- ❌ Users can add messages to conversations
+- ✅ Users can add messages to conversations
 - ❌ Users can update their friends list to include other users
 - ❌ Users can update their bio
 - ❌ Users can upload their own profile pictures

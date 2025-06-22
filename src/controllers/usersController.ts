@@ -167,3 +167,22 @@ export const getUserData = asyncHandler(async (req: Request, res: Response) => {
         handleError(error);
     }
 });
+
+export const getUserFriends = asyncHandler(async (req: Request, res: Response) => {
+    try {
+        const user = await prisma.user.findUnique({
+            where: { username: req.params.username },
+            include: { friends: true }
+        });
+        if (!user) { res.send(404).json({ message: "User not found. Cannot retrieve friends" }); }
+
+        const rawUserFriendsData = user?.friends
+        const safeUserFriendsData = rawUserFriendsData?.map((data) => {
+            return data.username
+        })
+
+        res.status(200).json({ message: `Retrieved ${req.params.username}'s friends`, friends: safeUserFriendsData });
+    } catch(error) {
+        handleError(error);
+    }
+});

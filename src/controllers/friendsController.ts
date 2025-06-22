@@ -4,7 +4,7 @@ import asyncHandler from 'express-async-handler';
 import prisma from '../utils/prismaClient';
 
 
-export const getUserFriends = asyncHandler(async (req: Request, res: Response) => {
+export const getMyFriends = asyncHandler(async (req: Request, res: Response) => {
     try {
         const user = await prisma.user.findUnique({
             where: { id: (req as any).userId },

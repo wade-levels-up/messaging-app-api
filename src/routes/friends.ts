@@ -1,9 +1,9 @@
 import { Router } from 'express';
-import { getUserFriends } from '../controllers/friendsController';
+import { getMyFriends } from '../controllers/friendsController';
 import { decodeAndAttachJWT } from '../middleware/decodeAndAttachJWT';
 
 const friendsRouter = Router();
 
-friendsRouter.get("/", decodeAndAttachJWT, getUserFriends);
+friendsRouter.get("/", decodeAndAttachJWT, getMyFriends);
 
 export { friendsRouter };

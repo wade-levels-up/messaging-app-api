@@ -150,6 +150,40 @@ test("User can create a new conversation with an opening message between themsel
     expect(janeResponse.body.conversationMessages[0].authorName).toBe("JohnDoe");
 })
 
+test("Users can create new messages", async () => {
+    const signInRes = await signInUser("johndoe@testmail.com", "SuperSecret11")
+    const token = signInRes.body.token; 
+    
+    const sender = 'JohnDoe'
+    const content = 'Today is going to be a good day'
+
+    // Retrieve the users conversations to get the ID needed to create a new message
+    const conversationResponse = await supertest(testApp)
+        .get("/conversations")
+        .set("Authorization", `Bearer ${token}`)
+    const conversationId = conversationResponse.body.conversations[0].id
+
+    // Create a new message using the conversation's ID
+    await supertest(testApp)
+        .post(`/conversations/${conversationId}/messages`)
+        .set("Authorization", `Bearer ${token}`)
+        .type("form")
+        .send({ sender, content })
+        .expect("Content-Type", /json/)
+        .expect({ message: `New message created by ${sender}` })
+        .expect(201);
+
+    const response = await supertest(testApp)
+        .get(`/conversations/${conversationId}/messages`)
+        .set("Authorization", `Bearer ${token}`)
+        .expect("Content-Type", /json/)
+        .expect(200);
+
+    // As the test conversation is configured with a test message, we expect the second message to be the one we created above
+    expect(response.body).toHaveProperty("conversationMessages")
+    expect(response.body.conversationMessages[1].content).toBe("Today is going to be a good day");
+})
+
 
 
 

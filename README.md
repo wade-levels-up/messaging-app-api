@@ -93,7 +93,7 @@ Signs a user into their account and returns a JWT to the browser
 ---
 
 **Method:** POST
-**Endpoint:** `/conversations`
+**Endpoint:** `/conversations/:conversation_id/messages`
 
 **Description:**  
 Creates a new message within a specific conversation from a logged in user
@@ -106,7 +106,7 @@ Authorization: Bearer 'your-jwt-token'
 
 ```json
 {
-  "content": "JohnDoe",
+  "content": "Today is going to be a good day",
   "authorName": "JohnDoe"
 }
 ```
@@ -115,14 +115,14 @@ Authorization: Bearer 'your-jwt-token'
 
 ```json
 {
-  "message": "New conversation started between JohnDoe and JaneDoe"
+  "message": "New message created by JohnDoe"
 }
 ```
 
 ---
 
 **Method:** POST
-**Endpoint:** `/conversations/:conversation_id/messages`
+**Endpoint:** `/conversations`
 
 **Description:**  
 Creates a new conversation between the logged in user and another user
@@ -190,7 +190,7 @@ Verifies a user's email address using the token sent to their email.
 **Description:**  
 Retrieves an array of all user's usernames.
 
-**Response Body:**
+**Example Response:**
 
 ```json
 {
@@ -207,7 +207,7 @@ Retrieves an array of all user's usernames.
 **Description:**  
 Retrieves a specific users data for purpose of displaying a users public profile
 
-**Response Body:**
+**Example Response:**
 
 ```json
 {
@@ -228,7 +228,7 @@ Retrieves the logged in user's data
 
 Authorization: Bearer 'your-jwt-token'
 
-**Response Body:**
+**Example Response:**
 
 ```json
 {
@@ -249,7 +249,7 @@ Retrieves a specific conversation's messages for the logged in user
 
 Authorization: Bearer 'your-jwt-token'
 
-**Response Body:**
+**Example Response:**
 
 ```json
 {
@@ -276,7 +276,7 @@ Retrieves an array of usernames that are friends of the logged in user
 
 Authorization: Bearer 'your-jwt-token'
 
-**Response Body:**
+**Example Response:**
 
 ```json
 {
@@ -293,7 +293,7 @@ Authorization: Bearer 'your-jwt-token'
 **Description:**  
 Retrieves a specific users friends as an array of usernames
 
-**Response Body:**
+**Example Response:**
 
 ```json
 {

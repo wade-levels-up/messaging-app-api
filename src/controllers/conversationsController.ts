@@ -3,7 +3,6 @@ import { handleError } from '../utils/handleError';
 import asyncHandler from 'express-async-handler';
 import prisma from '../utils/prismaClient';
 import dotenv from 'dotenv';
-import { send } from 'process';
 dotenv.config();
 
 
@@ -98,6 +97,37 @@ export const createConversation = asyncHandler(async (req: Request<{}, {}, NewCo
         })
 
         res.status(201).json({ message: `New conversation started between JohnDoe and ${recipient}` });
+    } catch(error) {
+        handleError(error);
+    }    
+})
+
+interface NewMessageBody {
+  sender: string;
+  content: string;
+}
+
+export const createMessage = asyncHandler(async (req: Request<Record<string, string>, {}, NewMessageBody>, res: Response) => {
+    try {
+        const { sender, content } = req.body
+        const conversationId = Number(req.params.conversation_id);
+
+        const existingConversation = await prisma.conversation.findUnique({ where: { id: conversationId } });
+        if (!existingConversation) {
+            res.status(400).json({ message: `Can't find conversation. Unable to create message`});
+            return;
+        }
+
+        await prisma.message.create({
+            data: {
+                content: content,
+                authorName: sender,
+                user: { connect: { id: (req as any).userId } },
+                conversation: { connect: { id: conversationId } }
+            }
+        });
+
+        res.status(201).json({ message: `New message created by ${sender}`});
     } catch(error) {
         handleError(error);
     }    

@@ -112,22 +112,26 @@ test("Accessing /users returns an array of all user's usernames, the first of wh
 });
 
 test('Accessing specific users route returns user data for the purpose of populating a profile page', async () => {
-  const signInRes = await signInUser('johndoe@testmail.com', 'SuperSecret11')
-  
-  const token = signInRes.body.token;
-
-  const response = await supertest(testApp)
-    .get("/users")
-    .set("Authorization", `Bearer ${token}`)
+  const johnsResponse = await supertest(testApp)
+    .get("/users/JohnDoe")
     .expect("Content-Type", /json/)
     .expect(200);
 
-  const userData = await supertest(testApp)
-    .get("/users/:user_id")
+  expect(johnsResponse.body).toHaveProperty("userData");
+  expect(johnsResponse.body.message).toBe("User data retrieved");
+  expect(johnsResponse.body.userData).toHaveProperty("username");
+  expect(johnsResponse.body.userData).toHaveProperty("joined");
+  expect(johnsResponse.body.userData['username']).toBe("JohnDoe");
+
+  const jimsResponse = await supertest(testApp)
+    .get("/users/JimDoe")
     .expect("Content-Type", /json/)
     .expect(200);
 
-  expect(response.body).toHaveProperty("userData");
-  expect(response.body.userData).toHaveProperty("username");
+  expect(jimsResponse.body).toHaveProperty("userData");
+  expect(jimsResponse.body.message).toBe("User data retrieved");
+  expect(jimsResponse.body.userData).toHaveProperty("username");
+  expect(jimsResponse.body.userData).toHaveProperty("joined");
+  expect(jimsResponse.body.userData['username']).toBe("JimDoe");
 })
 

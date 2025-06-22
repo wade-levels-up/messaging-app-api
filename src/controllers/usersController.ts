@@ -115,7 +115,7 @@ export const signIn = asyncHandler(async (req: Request<{}, {}, SignInBody>, res:
 
 
 
-export const getUserData = asyncHandler(async (req: Request, res: Response) => {
+export const getMyUserData = asyncHandler(async (req: Request, res: Response) => {
     try {
         const user = await prisma.user.findUnique({
             where: { id: (req as any).userId }
@@ -141,6 +141,28 @@ export const getAllUsersData = asyncHandler(async (req: Request, res: Response) 
     try {
         const allUsers = (await prisma.user.findMany({})).map((user) => user.username)
         res.status(200).json({ message: "Retrieved all users", allUsers })
+    } catch(error) {
+        handleError(error);
+    }
+});
+
+export const getUserData = asyncHandler(async (req: Request, res: Response) => {
+    try {
+        const user = await prisma.user.findUnique({
+            where: { username: req.params.username }
+        });
+
+        const safeUser = user
+            ? {
+                username: user.username,
+                joined: user.joined,
+            }
+            : null;
+
+        res.status(200).json({ 
+            message: "User data retrieved",
+            userData: safeUser
+        });
     } catch(error) {
         handleError(error);
     }

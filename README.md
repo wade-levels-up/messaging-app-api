@@ -28,11 +28,11 @@ Note: 👮🏼 Protected Routes require a valid JWT in the `Authorization` heade
 | ✅     | POST   | /signin                                  | Signs a user into their account and returns a JWT to the browser                                               |
 | ✅     | GET    | /verify-user?token=...                   | Account email verification - Verifies a user's email address using the token sent to their email.              |
 | ✅     | GET    | /users                                   | Retrieves an array of all user's usernames                                                                     |
-| ❌     | GET    | /users/:user_id                          | Retrieves a specific users data for purpose of displaying a users public profile                               |
+| ✅     | GET    | /users/:username                         | Retrieves a specific users data for purpose of displaying a users public profile                               |
 | ✅     | GET    | /users/me                                | 👮🏼 Protected: Retrieves the logged in user's data                                                              |
 | ✅     | GET    | /conversations/:conversation_id/messages | 👮🏼 Protected: Retrieves a specific conversation's messages for the id in the route parameter :conversation_id. |
 | ✅     | GET    | /friends                                 | 👮🏼 Protected: Retrieves an array of usernames that are friends of the logged in user                           |
-| ❌     | GET    | /users/:user_id/friends                  | Retrieves a specific users friends as an array of usernames                                                    |
+| ❌     | GET    | /users/:username/friends                 | Retrieves a specific users friends as an array of usernames                                                    |
 
 ---
 
@@ -106,7 +106,7 @@ Retrieves an array of all user's usernames.
 ---
 
 **Method:** GET
-**Endpoint:** `/users/:user_id`
+**Endpoint:** `/users/:username`
 **Description:**  
 Retrieves a specific users data for purpose of displaying a users public profile
 **Response Body:**

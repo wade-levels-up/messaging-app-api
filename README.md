@@ -26,6 +26,7 @@ Note: 👮🏼 Protected Routes require a valid JWT in the `Authorization` heade
 | ------ | ------ | ---------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
 | ✅     | POST   | /signup                                  | Creates a new user account                                                                                     |
 | ✅     | POST   | /signin                                  | Signs a user into their account and returns a JWT to the browser                                               |
+| ❌     | POST   | /conversations                           | 👮🏼 Protected: Creates a new conversation between the logged in user and another user                           |
 | ✅     | GET    | /verify-user?token=...                   | Account email verification - Verifies a user's email address using the token sent to their email.              |
 | ✅     | GET    | /users                                   | Retrieves an array of all user's usernames                                                                     |
 | ✅     | GET    | /users/:username                         | Retrieves a specific users data for purpose of displaying a users public profile                               |
@@ -81,6 +82,29 @@ Signs a user into their account and returns a JWT to the browser
 
 **Request Body:**
 
+```json
+{
+  "email": "janedoe@gmail.com",
+  "password": "super-secret-password"
+}
+```
+
+---
+
+**Method:** POST
+**Endpoint:** `/conversations`
+
+**Description:**  
+Creates a new conversation between the logged in user and another user
+
+**Example Response:**
+
+```json
+{
+  "message": "New conversation created between JohnDoe and JimDoe"
+}
+```
+
 ---
 
 ### Get Routes
@@ -106,7 +130,7 @@ Verifies a user's email address using the token sent to their email.
 
 - `token` (string, required): The verification token sent to the user's email.
 
-  **Example Response:**
+**Example Response:**
 
 ```json
 {

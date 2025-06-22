@@ -58,8 +58,10 @@ Creates a new user account.
 
 **Method:** POST
 **Endpoint:** `/signin`
+
 **Description:**  
 Signs a user into their account and returns a JWT to the browser
+
 **Request Body:**
 
 ```json
@@ -73,11 +75,14 @@ Signs a user into their account and returns a JWT to the browser
 
 **Method:** GET
 **Endpoint:** `/verify-user?token=...`
+
 **Description:**  
 Verifies a user's email address using the token sent to their email.
+
 **Query Parameters:**
 
 - `token` (string, required): The verification token sent to the user's email.
+
   **Example Response:**
 
 ```json
@@ -90,8 +95,10 @@ Verifies a user's email address using the token sent to their email.
 
 **Method:** GET
 **Endpoint:** `/users`
+
 **Description:**  
 Retrieves an array of all user's usernames.
+
 **Success Response:**
 
 - **Status:** 200 OK
@@ -107,8 +114,10 @@ Retrieves an array of all user's usernames.
 
 **Method:** GET
 **Endpoint:** `/users/:username`
+
 **Description:**  
 Retrieves a specific users data for purpose of displaying a users public profile
+
 **Response Body:**
 
 ```json
@@ -122,8 +131,10 @@ Retrieves a specific users data for purpose of displaying a users public profile
 
 **Method:** GET
 **Endpoint:** `/users/me`
+
 **Description:**  
 Retrieves the logged in user's data
+
 **Response Body:**
 
 ```json
@@ -137,8 +148,10 @@ Retrieves the logged in user's data
 
 **Method:** GET
 **Endpoint:** `/conversations/:conversation_id/messages`
+
 **Description:**  
 Retrieves a specific conversation's messages for the logged in user
+
 **Response Body:**
 
 ```json
@@ -158,8 +171,10 @@ Retrieves a specific conversation's messages for the logged in user
 
 **Method:** GET
 **Endpoint:** `/friends`
+
 **Description:**  
 Retrieves an array of usernames that are friends of the logged in user
+
 **Response Body:**
 
 ```json
@@ -170,3 +185,18 @@ Retrieves an array of usernames that are friends of the logged in user
 ```
 
 ---
+
+**Method:** GET
+**Endpoint:** `/users/:username/friends`
+
+**Description:**  
+Retrieves a specific users friends as an array of usernames
+
+**Response Body:**
+
+```json
+{
+  "message": "Retrieved John's friends",
+  "friends": ["JimDoe", "JaneDoe"]
+}
+```

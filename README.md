@@ -35,6 +35,7 @@ Note: 👮🏼 Protected Routes require a valid JWT in the `Authorization` heade
 | ✅     | GET    | /conversations/:conversation_id/messages | 👮🏼 Protected: Retrieves a specific conversation's messages for the id in the route parameter :conversation_id. |
 | ✅     | GET    | /friends                                 | 👮🏼 Protected: Retrieves an array of usernames that are friends of the logged in user                           |
 | ✅     | GET    | /users/:username/friends                 | Retrieves a specific users friends as an array of usernames                                                    |
+| ❌     | PUT    | /friends                                 | 👮🏼 Protected: Allows the logged in user to update their friends list to include another user                   |
 
 ---
 
@@ -299,5 +300,30 @@ Retrieves a specific users friends as an array of usernames
 {
   "message": "Retrieved JohnDoe's friends",
   "friends": ["JimDoe", "JaneDoe"]
+}
+```
+
+---
+
+### Put Routes
+
+---
+
+**Method:** PUT
+**Endpoint:** `/friends`
+
+**Description:**
+
+Allows the logged in user to update their friends list to include another user
+
+**Request Headers:**
+
+Authorization: Bearer 'your-jwt-token'
+
+**Example Response:**
+
+```json
+{
+  "message": "Succesfully added wadefoz as a friend"
 }
 ```

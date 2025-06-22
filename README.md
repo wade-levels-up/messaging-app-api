@@ -97,11 +97,21 @@ Signs a user into their account and returns a JWT to the browser
 **Description:**  
 Creates a new conversation between the logged in user and another user
 
+**Request Body:**
+
+```json
+{
+  "sender": "JohnDoe",
+  "recipient": "JaneDoe",
+  "openingMessage": "Hi Jane!"
+}
+```
+
 **Example Response:**
 
 ```json
 {
-  "message": "New conversation created between JohnDoe and JimDoe"
+  "message": "New conversation started between JohnDoe and JaneDoe"
 }
 ```
 

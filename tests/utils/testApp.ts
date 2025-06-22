@@ -5,11 +5,17 @@ import bcrypt from "bcryptjs";
 export const testApp = app;
 
 beforeEach(async () => {
+
+    // Clear the database data prior to running each test
+
     await prisma.$transaction([
         prisma.message.deleteMany({}),
         prisma.conversation.deleteMany({}),
         prisma.user.deleteMany({})
     ]);
+
+
+    // Seed the database with test data and users
 
     await prisma.user.createMany({
         data: [
@@ -40,9 +46,12 @@ beforeEach(async () => {
                     { username: 'JimDoe'}
                 ]
             },
-            lastMessage: 'Test message'
+            lastMessage: 'Good morning!'
         }
     })
+
+
+    // Retrieve user data for test users John and Jim
 
     const johnDoe = await prisma.user.findUnique({
         where: {
@@ -50,10 +59,31 @@ beforeEach(async () => {
         },
         include: { conversations: true }
     })
+    if (!johnDoe) { throw new Error("Failed to initialize JohnDoe user for test setup") }
 
-    if (!johnDoe) {
-        throw new Error("Failed to initialize JohnDoe user for test setup")
-    }
+    const jimDoe = await prisma.user.findUnique({
+        where: {
+            username: "JimDoe"
+        },
+        include: { conversations: true }
+    })
+    if (!jimDoe) { throw new Error("Failed to initialize JimDoe user for test setup") }
+
+
+    // Update users Jim and John to have each other as friends
+
+    await prisma.user.update({
+        where: { id: String(johnDoe.id) },
+        data: { friends: { connect: { id: jimDoe.id } } }
+    });
+
+    await prisma.user.update({
+        where: { id: String(jimDoe.id) },
+        data: { friends: { connect: { id: johnDoe.id } } }
+    });
+
+
+    // Create a test message for testing purposes
 
     await prisma.message.create({
         data: {

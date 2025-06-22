@@ -118,8 +118,7 @@ export const signIn = asyncHandler(async (req: Request<{}, {}, SignInBody>, res:
 export const getUserData = asyncHandler(async (req: Request, res: Response) => {
     try {
         const user = await prisma.user.findUnique({
-            where: { id: (req as any).userId },
-            include: { friends: true, friendsOf: true },
+            where: { id: (req as any).userId }
         });
 
         const safeUser = user

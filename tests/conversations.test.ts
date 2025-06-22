@@ -36,7 +36,7 @@ test("When logged in as John, John can retrieve the test message and conversatio
 
     expect(response.body).toHaveProperty("conversations")
     expect(response.body.conversations[0]).toHaveProperty("id")
-    expect(response.body.conversations[0].lastMessage).toEqual('Test message')
+    expect(response.body.conversations[0].lastMessage).toEqual('Good morning!')
 })
 
 test("When logged in as Jim, Jim can retrieve the test message and conversation between himself and John", async () => {
@@ -52,7 +52,7 @@ test("When logged in as Jim, Jim can retrieve the test message and conversation 
 
     expect(response.body).toHaveProperty("conversations")
     expect(response.body.conversations[0]).toHaveProperty("id")
-    expect(response.body.conversations[0].lastMessage).toEqual('Test message')
+    expect(response.body.conversations[0].lastMessage).toEqual('Good morning!')
 })
 
 test("When logged in as Wade, Wade won't have any conversations", async () => {

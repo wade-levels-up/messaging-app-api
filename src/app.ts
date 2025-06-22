@@ -7,6 +7,7 @@ import { signInRouter } from './routes/signIn';
 import { verifyUserRouter } from './routes/verifyUser';
 import { usersRouter } from './routes/users';
 import { conversationsRouter } from './routes/conversations';
+import { friendsRouter } from './routes/friends';
 
 const app = express();
 
@@ -28,6 +29,7 @@ app.use('/signin', signInRouter);
 app.use('/verify-user', verifyUserRouter);
 app.use('/users', usersRouter);
 app.use('/conversations', conversationsRouter);
+app.use('/friends', friendsRouter);
 
 app.use((req, res) => {
   console.log('Missed route:', req.method, req.originalUrl);

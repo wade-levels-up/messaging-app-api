@@ -32,11 +32,28 @@ Note: 👮🏼 Protected Routes require a valid JWT in the `Authorization` heade
 | ✅     | GET    | /users/me                                | 👮🏼 Protected: Retrieves the logged in user's data                                                              |
 | ✅     | GET    | /conversations/:conversation_id/messages | 👮🏼 Protected: Retrieves a specific conversation's messages for the id in the route parameter :conversation_id. |
 | ✅     | GET    | /friends                                 | 👮🏼 Protected: Retrieves an array of usernames that are friends of the logged in user                           |
-| ❌     | GET    | /users/:username/friends                 | Retrieves a specific users friends as an array of usernames                                                    |
+| ✅     | GET    | /users/:username/friends                 | Retrieves a specific users friends as an array of usernames                                                    |
 
 ---
 
-### Detailed Breakdown
+### Features Implemented OR To Be Implemented
+
+- ✅ Users can create an acount and sign in with email verification
+- ✅ All users can be displayed publicly
+- ✅ Specific user data can be retrieved for populating user profiles
+- ✅ A logged in users data can be retrieved for populating their own profile
+- ✅ Messages can be retrieved for a specific conversation for the logged in user
+- ❌ Users can create new conversations with other users
+- ❌ Users can add messages to conversations
+- ❌ Users can update their friends list to include other users
+- ❌ Users can update their bio
+- ❌ Users can upload their own profile pictures
+
+---
+
+### Post Routes
+
+---
 
 **Method:** POST
 **Endpoint:** `/signup`
@@ -63,6 +80,12 @@ Creates a new user account.
 Signs a user into their account and returns a JWT to the browser
 
 **Request Body:**
+
+---
+
+### Get Routes
+
+---
 
 ```json
 {

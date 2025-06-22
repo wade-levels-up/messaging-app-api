@@ -32,12 +32,13 @@ Note: 👮🏼 Protected Routes require a valid JWT in the `Authorization` heade
 | ✅     | GET    | /users/me                                | 👮🏼 Protected: Retrieves the logged in user's data                                                              |
 | ✅     | GET    | /conversations/:conversation_id/messages | 👮🏼 Protected: Retrieves a specific conversation's messages for the id in the route parameter :conversation_id. |
 | ❌     | GET    | /friends                                 | 👮🏼 Protected: Retrieves an array of usernames that are friends of the logged in user                           |
+| ❌     | GET    | /users/:user_id/friends                  | Retrieves a specific users friends as an array of usernames                                                    |
 
 ---
 
 ### Detailed Breakdown
 
-✍🏻 **Method:** POST
+**Method:** POST
 **Endpoint:** `/signup`
 
 **Description:**  
@@ -55,12 +56,10 @@ Creates a new user account.
 
 ---
 
-✍🏻 **Method:** POST
+**Method:** POST
 **Endpoint:** `/signin`
-
 **Description:**  
 Signs a user into their account and returns a JWT to the browser
-
 **Request Body:**
 
 ```json
@@ -72,17 +71,14 @@ Signs a user into their account and returns a JWT to the browser
 
 ---
 
-🪙 **Method:** GET
+**Method:** GET
 **Endpoint:** `/verify-user?token=...`
-
 **Description:**  
 Verifies a user's email address using the token sent to their email.
-
 **Query Parameters:**
 
 - `token` (string, required): The verification token sent to the user's email.
-
-**Example Response:**
+  **Example Response:**
 
 ```json
 {
@@ -92,19 +88,14 @@ Verifies a user's email address using the token sent to their email.
 
 ---
 
-🐶 **Method:** GET
+**Method:** GET
 **Endpoint:** `/users`
-
 **Description:**  
 Retrieves an array of all user's usernames.
-
 **Requires:**
 A valid JWT in the `Authorization` header.
-
 **Headers:**
-
 Authorization: Bearer `(your JWT token)`
-
 **Success Response:**
 
 - **Status:** 200 OK
@@ -118,12 +109,10 @@ Authorization: Bearer `(your JWT token)`
 
 ---
 
-🐶 **Method:** GET
+**Method:** GET
 **Endpoint:** `/users/me`
-
 **Description:**  
 Retrieves the logged in user's data
-
 **Response Body:**
 
 ```json
@@ -135,12 +124,10 @@ Retrieves the logged in user's data
 
 ---
 
-🐶 **Method:** GET
+**Method:** GET
 **Endpoint:** `/conversations/:conversation_id/messages`
-
 **Description:**  
 Retrieves a specific conversation's messages for the logged in user
-
 **Response Body:**
 
 ```json
@@ -153,5 +140,20 @@ Retrieves a specific conversation's messages for the logged in user
       "createdAt": "17/05/2025"
     }
   ]
+}
+```
+
+---
+
+**Method:** GET
+**Endpoint:** `/users/:user_id`
+**Description:**  
+Retrieves a specific users data for purpose of displaying a users public profile
+**Response Body:**
+
+```json
+{
+  "message": "User data retrieved",
+  "userData": { username, joined }
 }
 ```

@@ -27,11 +27,11 @@ Note: 👮🏼 Protected Routes require a valid JWT in the `Authorization` heade
 | ✅     | POST   | /signup                                  | Creates a new user account                                                                                     |
 | ✅     | POST   | /signin                                  | Signs a user into their account and returns a JWT to the browser                                               |
 | ✅     | GET    | /verify-user?token=...                   | Account email verification - Verifies a user's email address using the token sent to their email.              |
-| ✅     | GET    | /users                                   | 👮🏼 Protected: Retrieves an array of all user's usernames                                                       |
+| ✅     | GET    | /users                                   | Retrieves an array of all user's usernames                                                                     |
 | ❌     | GET    | /users/:user_id                          | Retrieves a specific users data for purpose of displaying a users public profile                               |
 | ✅     | GET    | /users/me                                | 👮🏼 Protected: Retrieves the logged in user's data                                                              |
 | ✅     | GET    | /conversations/:conversation_id/messages | 👮🏼 Protected: Retrieves a specific conversation's messages for the id in the route parameter :conversation_id. |
-| ❌     | GET    | /friends                                 | 👮🏼 Protected: Retrieves an array of usernames that are friends of the logged in user                           |
+| ✅     | GET    | /friends                                 | 👮🏼 Protected: Retrieves an array of usernames that are friends of the logged in user                           |
 | ❌     | GET    | /users/:user_id/friends                  | Retrieves a specific users friends as an array of usernames                                                    |
 
 ---
@@ -92,10 +92,6 @@ Verifies a user's email address using the token sent to their email.
 **Endpoint:** `/users`
 **Description:**  
 Retrieves an array of all user's usernames.
-**Requires:**
-A valid JWT in the `Authorization` header.
-**Headers:**
-Authorization: Bearer `(your JWT token)`
 **Success Response:**
 
 - **Status:** 200 OK
@@ -104,6 +100,21 @@ Authorization: Bearer `(your JWT token)`
 {
   "message": "Retrieved all users.",
   "allUsers": ["JohnDoe", "JaneDoe", "WadeFoz"]
+}
+```
+
+---
+
+**Method:** GET
+**Endpoint:** `/users/:user_id`
+**Description:**  
+Retrieves a specific users data for purpose of displaying a users public profile
+**Response Body:**
+
+```json
+{
+  "message": "User data retrieved",
+  "userData": { username, joined }
 }
 ```
 
@@ -146,14 +157,16 @@ Retrieves a specific conversation's messages for the logged in user
 ---
 
 **Method:** GET
-**Endpoint:** `/users/:user_id`
+**Endpoint:** `/friends`
 **Description:**  
-Retrieves a specific users data for purpose of displaying a users public profile
+Retrieves an array of usernames that are friends of the logged in user
 **Response Body:**
 
 ```json
 {
-  "message": "User data retrieved",
-  "userData": { username, joined }
+  "message": "Retrieved your friends",
+  "friends": ["JohnDoe", "JimDoe"]
 }
 ```
+
+---

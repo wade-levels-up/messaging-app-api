@@ -5,6 +5,6 @@ import { decodeAndAttachJWT } from '../middleware/decodeAndAttachJWT';
 const usersRouter = Router();
 
 usersRouter.get("/me", decodeAndAttachJWT, getUserData);
-usersRouter.get("/", decodeAndAttachJWT, getAllUsersData);
+usersRouter.get("/", getAllUsersData);
 
 export { usersRouter };

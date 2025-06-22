@@ -86,23 +86,6 @@ test("Sign in with invalid username sends 404 error and message", async () => {
   expect(response.body.token).toBeUndefined();
 });
 
-test("Accessing /users without token returns 401", async () => {
-  await supertest(testApp)
-    .get("/users")
-    .expect("Content-Type", /json/)
-    .expect({ message: "No token provided" })
-    .expect(401);
-})
-
-test("Accessing /users with invalid token returns 401", async () => {
-  await supertest(testApp)
-    .get("/users")
-    .set("Authorization", "Bearer invalidtoken")
-    .expect("Content-Type", /json/)
-    .expect({ message: "Invalid or expired token" })
-    .expect(401);
-})
-
 test("Accessing /users/me with valid token returns 200 and users data", async () => {
   const signInRes = await signInUser('johndoe@testmail.com', 'SuperSecret11')
 
@@ -119,6 +102,16 @@ test("Accessing /users/me with valid token returns 200 and users data", async ()
 });
 
 test("Accessing /users returns an array of all user's usernames, the first of which is JohnDoe", async () => {
+  const response = await supertest(testApp)
+    .get("/users")
+    .expect("Content-Type", /json/)
+    .expect(200);
+
+  expect(Array.isArray(response.body.allUsers)).toBe(true);
+  expect(response.body.allUsers[0]).toEqual("JohnDoe");
+});
+
+test('Accessing specific users route returns user data for the purpose of populating a profile page', async () => {
   const signInRes = await signInUser('johndoe@testmail.com', 'SuperSecret11')
   
   const token = signInRes.body.token;
@@ -129,7 +122,12 @@ test("Accessing /users returns an array of all user's usernames, the first of wh
     .expect("Content-Type", /json/)
     .expect(200);
 
-  expect(Array.isArray(response.body.allUsers)).toBe(true);
-  expect(response.body.allUsers[0]).toEqual("JohnDoe");
-});
+  const userData = await supertest(testApp)
+    .get("/users/:user_id")
+    .expect("Content-Type", /json/)
+    .expect(200);
+
+  expect(response.body).toHaveProperty("userData");
+  expect(response.body.userData).toHaveProperty("username");
+})
 

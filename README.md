@@ -196,7 +196,7 @@ Retrieves a specific users friends as an array of usernames
 
 ```json
 {
-  "message": "Retrieved John's friends",
+  "message": "Retrieved JohnDoe's friends",
   "friends": ["JimDoe", "JaneDoe"]
 }
 ```

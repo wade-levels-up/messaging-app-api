@@ -135,3 +135,14 @@ test('Accessing specific users route returns user data for the purpose of popula
   expect(jimsResponse.body.userData['username']).toBe("JimDoe");
 })
 
+test('Able to retrieve friends list of a specific user', async () => {
+  const johnsResponse = await supertest(testApp)
+    .get("/users/JohnDoe/friends")
+    .expect("Content-Type", /json/)
+    .expect(200);
+
+  expect(johnsResponse.body).toHaveProperty("friends");
+  expect(johnsResponse.body.message).toBe("Retrieved JohnDoe's friends");
+  expect(johnsResponse.body.friends[0]).toBe("JimDoe");
+})
+

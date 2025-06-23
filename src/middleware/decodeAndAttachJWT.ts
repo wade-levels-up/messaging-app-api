@@ -1,7 +1,5 @@
 import { default as jwt } from "jsonwebtoken"
-import express, { Request, Response, NextFunction } from 'express';
-import dotenv from 'dotenv';
-dotenv.config();
+import { Request, Response, NextFunction } from 'express';
 
 export function decodeAndAttachJWT(req: Request, res: Response, next:NextFunction): void {
 

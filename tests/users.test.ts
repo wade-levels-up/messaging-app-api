@@ -1,11 +1,23 @@
 import supertest from "supertest";
 import { testApp } from "./utils/testApp";
 import signInUser from "./utils/signInUser";
+import fs from "fs";
+import path from "path";
 
 // Mocks
 
 jest.mock("../src/utils/sendEmail", () => ({
   sendVerificationEmail: jest.fn().mockResolvedValue(undefined),
+}));
+
+jest.mock("../src/utils/supabaseClient", () => ({
+  supabase: {
+    storage: {
+      from: () => ({
+        upload: jest.fn().mockResolvedValue({ data: {}, error: null }),
+      }),
+    },
+  },
 }));
 
 // Tests
@@ -186,6 +198,7 @@ test('Logged in user is able to update bio', async () => {
   expect(secondResponse.body.userData.bio).toBe('Hi my name is JohnDoe. I have a sister named JaneDoe and a brother named JimDoe');
 });
 
+
 test('Check for a profile_picture_path property on the users data', async () => {
   // Sign in as JohnDoe and retrieve his profile picture
   const signInRes = await signInUser('johndoe@testmail.com', 'SuperSecret11')
@@ -206,17 +219,18 @@ test('Users can update the pathway to their profile picture file', async () => {
     .get("/users/me")
     .set("Authorization", `Bearer ${token}`)
 
-  expect(firstResponse.body.userData.profile_picture_path).toBeFalsy;
+  expect(firstResponse.body.userData.profile_picture_path).toBeFalsy();
 
   // Submit the new file for JohnDoe's new profile picture
 
-  const newFileName = 'johnsBestFishingSelfie.jpeg'
+  const newFileName = 'johnDoeWithFish.jpeg'
+  const filePath = path.join(__dirname, "../public/johnDoeWithFish.jpeg");
+  const fileBuffer = fs.readFileSync(filePath);
 
   await supertest(testApp)
     .put("/users/me/profile_picture")
     .set("Authorization", `Bearer ${token}`)
-    .type("form")
-    .send({ file: newFileName})
+    .attach("file", fileBuffer, newFileName)
     .expect("Content-Type", /json/)
     .expect({ message: "Succesfully updated your profile picture" })
     .expect(201);
@@ -226,5 +240,7 @@ test('Users can update the pathway to their profile picture file', async () => {
     .get("/users/me")
     .set("Authorization", `Bearer ${token}`)
 
-  expect(secondResponse.body.userData.profile_picture_path).toBe(`https://supabase.com/${newFileName}`);
-})
+  expect(typeof secondResponse.body.userData.profile_picture_path).toBe("string");
+  expect(secondResponse.body.userData.profile_picture_path.length).toBeGreaterThan(0);
+  expect(secondResponse.body.userData.profile_picture_path).toContain("johnDoeWithFish");
+});

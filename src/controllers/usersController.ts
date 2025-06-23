@@ -1,17 +1,15 @@
 import { Request, Response } from 'express';
 import { handleError } from '../utils/handleError';
+import { supabase } from "../utils/supabaseClient";
 import asyncHandler from 'express-async-handler';
 import prisma from '../utils/prismaClient';
 import { PrismaClient } from '@prisma/client';
 import { validateUsername, validateEmail, validatePassword } from '../validators/signUpValidators';
 import { handleValidationError } from '../utils/handleValidationError';
 import { sendVerificationEmail } from '../utils/sendEmail';
-import dotenv from 'dotenv';
-dotenv.config();
 import crypto from 'crypto';
 import bcrypt from "bcryptjs";
 import { default as jwt } from 'jsonwebtoken';
-import { profile } from 'console';
 
 
 
@@ -221,3 +219,43 @@ export const updateBio = asyncHandler(async (req: Request<{}, {}, UpdateBioBody>
         handleError(error)
     }
 })
+
+export const updateProfilePicture = asyncHandler(async (req: Request, res: Response) => {
+  try {
+    // Get the users data
+    const user = await prisma.user.findUnique({
+        where: { id: (req as any).userId }
+    });
+
+    if (!user) {
+        res.status(404).json({ message: 'Unable to update profile picture. User ID not found'});
+        return;
+    }
+
+    if (!req.file) {
+        res.status(404).json({ message: 'Unable to update profile picture. No file data found'});
+        return;
+    }
+
+    const filePath = `${user.username}-${Date.now()}-profile-picture-${
+      req.file.originalname
+    }`;
+
+    const { data, error } = await supabase.storage
+      .from("profile-pictures")
+      .upload(filePath, req.file.buffer, { contentType: req.file.mimetype });
+
+    if (error) {
+      throw new Error(`Supabase upload error: ${error.message}`);
+    }
+
+    await prisma.user.update({
+        where: { id: (req as any).userId }, 
+        data: { profile_picture_path: filePath }
+    });
+
+    res.status(201).json({ message: 'Succesfully updated your profile picture'})
+  } catch (error) {
+    handleError(error)
+  }
+});

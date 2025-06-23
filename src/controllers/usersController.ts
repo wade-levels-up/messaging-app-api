@@ -11,6 +11,7 @@ dotenv.config();
 import crypto from 'crypto';
 import bcrypt from "bcryptjs";
 import { default as jwt } from 'jsonwebtoken';
+import { profile } from 'console';
 
 
 
@@ -125,7 +126,8 @@ export const getMyUserData = asyncHandler(async (req: Request, res: Response) =>
             ? {
                 username: user.username,
                 joined: user.joined,
-                bio: user.bio
+                bio: user.bio,
+                profile_picture_path: user.profile_picture_path
             }
             : null;
 
@@ -157,7 +159,8 @@ export const getUserData = asyncHandler(async (req: Request, res: Response) => {
             ? {
                 username: user.username,
                 joined: user.joined,
-                bio: user.bio
+                bio: user.bio,
+                profile_picture_path: user.profile_picture_path
             }
             : null;
 

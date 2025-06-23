@@ -190,10 +190,41 @@ test('Check for a profile_picture_path property on the users data', async () => 
   // Sign in as JohnDoe and retrieve his profile picture
   const signInRes = await signInUser('johndoe@testmail.com', 'SuperSecret11')
   const token = signInRes.body.token;
+  const response = await supertest(testApp)
+    .get("/users/me")
+    .set("Authorization", `Bearer ${token}`)
+
+  expect(response.body).toHaveProperty("userData");
+  expect(response.body.userData).toHaveProperty("profile_picture_path");
+})
+
+test('Users can update the pathway to their profile picture file', async () => {
+  // Sign in as JohnDoe and retrieve his profile picture path, which is expected to be empty
+  const signInRes = await signInUser('johndoe@testmail.com', 'SuperSecret11')
+  const token = signInRes.body.token;
   const firstResponse = await supertest(testApp)
     .get("/users/me")
     .set("Authorization", `Bearer ${token}`)
 
-  expect(firstResponse.body).toHaveProperty("userData");
-  expect(firstResponse.body.userData).toHaveProperty("profile_picture_path");
+  expect(firstResponse.body.userData.profile_picture_path).toBeFalsy;
+
+  // Submit the new file for JohnDoe's new profile picture
+
+  const newFileName = 'johnsBestFishingSelfie.jpeg'
+
+  await supertest(testApp)
+    .put("/users/me/profile_picture")
+    .set("Authorization", `Bearer ${token}`)
+    .type("form")
+    .send({ file: newFileName})
+    .expect("Content-Type", /json/)
+    .expect({ message: "Succesfully updated your profile picture" })
+    .expect(201);
+
+  // Confirm that the path to JohnDoe's new profile picture has been updated
+  const secondResponse = await supertest(testApp)
+    .get("/users/me")
+    .set("Authorization", `Bearer ${token}`)
+
+  expect(secondResponse.body.userData.profile_picture_path).toBe(`https://supabase.com/${newFileName}`);
 })

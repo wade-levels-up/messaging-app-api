@@ -186,3 +186,14 @@ test('Logged in user is able to update bio', async () => {
   expect(secondResponse.body.userData.bio).toBe('Hi my name is JohnDoe. I have a sister named JaneDoe and a brother named JimDoe');
 });
 
+test('Check for a profile_picture_path property on the users data', async () => {
+  // Sign in as JohnDoe and retrieve his profile picture
+  const signInRes = await signInUser('johndoe@testmail.com', 'SuperSecret11')
+  const token = signInRes.body.token;
+  const firstResponse = await supertest(testApp)
+    .get("/users/me")
+    .set("Authorization", `Bearer ${token}`)
+
+  expect(firstResponse.body).toHaveProperty("userData");
+  expect(firstResponse.body.userData).toHaveProperty("profile_picture_path");
+})

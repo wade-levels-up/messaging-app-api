@@ -35,7 +35,7 @@ Note: 👮🏼 Protected Routes require a valid JWT in the `Authorization` heade
 | ✅     | GET    | /conversations/:conversation_id/messages | 👮🏼 Protected: Retrieves a specific conversation's messages for the id in the route parameter :conversation_id. |
 | ✅     | GET    | /friends                                 | 👮🏼 Protected: Retrieves an array of usernames that are friends of the logged in user                           |
 | ✅     | GET    | /users/:username/friends                 | Retrieves a specific users friends as an array of usernames                                                    |
-| ❌     | PUT    | /friends                                 | 👮🏼 Protected: Allows the logged in user to update their friends list to include another user                   |
+| ✅     | PUT    | /friends                                 | 👮🏼 Protected: Allows the logged in user to update their friends list to include another user                   |
 
 ---
 
@@ -48,7 +48,7 @@ Note: 👮🏼 Protected Routes require a valid JWT in the `Authorization` heade
 - ✅ Messages can be retrieved for a specific conversation for the logged in user
 - ✅ Users can create new conversations with other users
 - ✅ Users can add messages to conversations
-- ❌ Users can update their friends list to include other users
+- ✅ Users can update their friends list to include other users
 - ❌ Users can update their bio
 - ❌ Users can upload their own profile pictures
 

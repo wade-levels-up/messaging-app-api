@@ -19,6 +19,7 @@ model User {
   password          String
   email             String         @unique
   joined            DateTime       @default(now())
+  bio               String?        @default("")
   friends           User[]         @relation("UserFriends")
   friendsOf         User[]         @relation("UserFriends")
   conversations     Conversation[] @relation("UserConversations")
@@ -42,6 +43,6 @@ model Message {
   authorName     String
   userId         String
   conversation   Conversation @relation(fields: [conversationId], references: [id])
-  conversationId Int          @unique
+  conversationId Int
   createdAt      DateTime     @default(now())
 }

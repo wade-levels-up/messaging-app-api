@@ -188,3 +188,33 @@ export const getUserFriends = asyncHandler(async (req: Request, res: Response) =
         handleError(error);
     }
 });
+
+interface UpdateBioBody {
+  content: string;
+}
+
+export const updateBio = asyncHandler(async (req: Request<{}, {}, UpdateBioBody>, res: Response) => {
+    try {
+        const user = await prisma.user.findUnique({
+            where: { id: (req as any).userId }
+        });
+
+        if (!user) {
+            res.status(404).json({ message: 'Unable to update bio. User ID not found'});
+            return;
+        }
+
+        await prisma.user.update({
+            where: {
+                id: user.id
+            },
+            data: {
+                bio: String(req.body.content)
+            }
+        })
+
+        res.status(201).json({ message: 'Succesfully updated your bio'})
+    } catch(error) {
+        handleError(error)
+    }
+})

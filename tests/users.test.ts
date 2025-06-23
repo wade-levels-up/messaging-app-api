@@ -169,6 +169,7 @@ test('Logged in user is able to update bio', async () => {
   // Update JohnDoe's bio
   await supertest(testApp)
     .put("/users/me/bio")
+    .set("Authorization", `Bearer ${token}`)
     .type("form")
     .send({ content: 'Hi my name is JohnDoe. I have a sister named JaneDoe and a brother named JimDoe'})
     .expect("Content-Type", /json/)
@@ -182,6 +183,6 @@ test('Logged in user is able to update bio', async () => {
 
   expect(secondResponse.body).toHaveProperty("userData");
   expect(secondResponse.body.userData).toHaveProperty("bio");
-  expect(secondResponse.body.userData.bio).toBe({ 'Hi my name is JohnDoe. I have a sister named JaneDoe and a brother named JimDoe': String });
+  expect(secondResponse.body.userData.bio).toBe('Hi my name is JohnDoe. I have a sister named JaneDoe and a brother named JimDoe');
 });
 

@@ -37,6 +37,7 @@ Note: 👮🏼 Protected Routes require a valid JWT in the `Authorization` heade
 | ✅     | GET    | /users/:username/friends                 | Retrieves a specific users friends as an array of usernames                                                    |
 | ✅     | PUT    | /friends                                 | 👮🏼 Protected: Allows the logged in user to update their friends list to include another user                   |
 | ✅     | PUT    | /users/me/bio                            | 👮🏼 Protected: Allows the logged in user to update their bio                                                    |
+| ❌     | PUT    | /users/me/profile_picture                | 👮🏼 Protected: Allows the logged in user to update their profile picture                                        |
 
 ---
 
@@ -355,5 +356,34 @@ Authorization: Bearer 'your-jwt-token'
 ```json
 {
   "message": "Succesfully updated your bio"
+}
+```
+
+---
+
+**Method:** PUT
+**Endpoint:** `/users/me/profile_picture`
+
+**Description:**
+
+Allows the logged in user to update their profile picture
+
+**Request Headers:**
+
+Authorization: Bearer 'your-jwt-token'
+
+**Request Body:**
+
+```json
+{
+  "file": "fileName.jpeg"
+}
+```
+
+**Example Response:**
+
+```json
+{
+  "message": "Succesfully updated your profile picture"
 }
 ```

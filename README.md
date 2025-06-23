@@ -36,6 +36,7 @@ Note: 👮🏼 Protected Routes require a valid JWT in the `Authorization` heade
 | ✅     | GET    | /friends                                 | 👮🏼 Protected: Retrieves an array of usernames that are friends of the logged in user                           |
 | ✅     | GET    | /users/:username/friends                 | Retrieves a specific users friends as an array of usernames                                                    |
 | ✅     | PUT    | /friends                                 | 👮🏼 Protected: Allows the logged in user to update their friends list to include another user                   |
+| ❌     | PUT    | /users/me/bio                            | 👮🏼 Protected: Allows the logged in user to update their bio                                                    |
 
 ---
 
@@ -325,5 +326,26 @@ Authorization: Bearer 'your-jwt-token'
 ```json
 {
   "message": "Succesfully added wadefoz as a friend"
+}
+```
+
+---
+
+**Method:** PUT
+**Endpoint:** `/users/me/bio`
+
+**Description:**
+
+Allows the logged in user to update their bio
+
+**Request Headers:**
+
+Authorization: Bearer 'your-jwt-token'
+
+**Example Response:**
+
+```json
+{
+  "message": "Succesfully updated your bio"
 }
 ```

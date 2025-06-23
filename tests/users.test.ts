@@ -140,3 +140,48 @@ test('Able to retrieve friends list of a specific user', async () => {
   expect(johnsResponse.body.friends[0]).toBe("JimDoe");
 })
 
+test('User data contains a bio field', async () => {
+  const signInRes = await signInUser('johndoe@testmail.com', 'SuperSecret11')
+  const token = signInRes.body.token;
+
+  const response = await supertest(testApp)
+    .get("/users/me")
+    .set("Authorization", `Bearer ${token}`)
+    .expect("Content-Type", /json/)
+    .expect(200);
+
+  expect(response.body).toHaveProperty("userData");
+  expect(response.body.userData).toHaveProperty("bio");
+});
+
+test('Logged in user is able to update bio', async () => {
+  // Sign in as JohnDoe and retrieve his empty bio
+  const signInRes = await signInUser('johndoe@testmail.com', 'SuperSecret11')
+  const token = signInRes.body.token;
+  const firstResponse = await supertest(testApp)
+    .get("/users/me")
+    .set("Authorization", `Bearer ${token}`)
+
+  expect(firstResponse.body).toHaveProperty("userData");
+  expect(firstResponse.body.userData).toHaveProperty("bio");
+  expect(firstResponse.body.userData.bio).toBeFalsy;
+
+  // Update JohnDoe's bio
+  await supertest(testApp)
+    .put("/users/me/bio")
+    .type("form")
+    .send({ content: 'Hi my name is JohnDoe. I have a sister named JaneDoe and a brother named JimDoe'})
+    .expect("Content-Type", /json/)
+    .expect({ message: "Succesfully updated your bio" })
+    .expect(201);
+
+  // Expect to see JohnDoe's bio updated when we retrieve his data the second time
+  const secondResponse = await supertest(testApp)
+    .get("/users/me")
+    .set("Authorization", `Bearer ${token}`)
+
+  expect(secondResponse.body).toHaveProperty("userData");
+  expect(secondResponse.body.userData).toHaveProperty("bio");
+  expect(secondResponse.body.userData.bio).toBe({ 'Hi my name is JohnDoe. I have a sister named JaneDoe and a brother named JimDoe': String });
+});
+

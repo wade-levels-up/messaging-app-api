@@ -37,7 +37,7 @@ Note: 👮🏼 Protected Routes require a valid JWT in the `Authorization` heade
 | ✅     | GET    | /users/:username/friends                 | Retrieves a specific users friends as an array of usernames                                                    |
 | ✅     | PUT    | /friends                                 | 👮🏼 Protected: Allows the logged in user to update their friends list to include another user                   |
 | ✅     | PUT    | /users/me/bio                            | 👮🏼 Protected: Allows the logged in user to update their bio                                                    |
-| ❌     | PUT    | /users/me/profile_picture                | 👮🏼 Protected: Allows the logged in user to update their profile picture                                        |
+| ✅     | PUT    | /users/me/profile_picture                | 👮🏼 Protected: Allows the logged in user to update their profile picture                                        |
 
 ---
 
@@ -52,7 +52,7 @@ Note: 👮🏼 Protected Routes require a valid JWT in the `Authorization` heade
 - ✅ Users can add messages to conversations
 - ✅ Users can update their friends list to include other users
 - ✅ Users can update their bio
-- ❌ Users can upload their own profile pictures
+- ✅ Users can upload their own profile pictures
 
 ---
 

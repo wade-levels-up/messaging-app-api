@@ -125,6 +125,7 @@ export const getMyUserData = asyncHandler(async (req: Request, res: Response) =>
             ? {
                 username: user.username,
                 joined: user.joined,
+                bio: user.bio
             }
             : null;
 
@@ -156,6 +157,7 @@ export const getUserData = asyncHandler(async (req: Request, res: Response) => {
             ? {
                 username: user.username,
                 joined: user.joined,
+                bio: user.bio
             }
             : null;
 

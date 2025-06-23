@@ -342,6 +342,14 @@ Allows the logged in user to update their bio
 
 Authorization: Bearer 'your-jwt-token'
 
+**Request Body:**
+
+```json
+{
+  "content": "Hi my name is Bob. I like pina coladas and getting caught in the rain."
+}
+```
+
 **Example Response:**
 
 ```json

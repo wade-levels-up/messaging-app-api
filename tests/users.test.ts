@@ -10,16 +10,6 @@ jest.mock("../src/utils/sendEmail", () => ({
   sendVerificationEmail: jest.fn().mockResolvedValue(undefined),
 }));
 
-jest.mock("../src/utils/supabaseClient", () => ({
-  supabase: {
-    storage: {
-      from: () => ({
-        upload: jest.fn().mockResolvedValue({ data: {}, error: null }),
-      }),
-    },
-  },
-}));
-
 // Tests
 
 test("sign up route works", async () => {
@@ -242,5 +232,5 @@ test('Users can update the pathway to their profile picture file', async () => {
 
   expect(typeof secondResponse.body.userData.profile_picture_path).toBe("string");
   expect(secondResponse.body.userData.profile_picture_path.length).toBeGreaterThan(0);
-  expect(secondResponse.body.userData.profile_picture_path).toContain("johnDoeWithFish");
+  expect(secondResponse.body.userData.profile_picture_path).toBe("JohnDoe-profile-picture");
 });

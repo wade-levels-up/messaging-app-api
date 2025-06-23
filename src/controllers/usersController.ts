@@ -237,13 +237,11 @@ export const updateProfilePicture = asyncHandler(async (req: Request, res: Respo
         return;
     }
 
-    const filePath = `${user.username}-${Date.now()}-profile-picture-${
-      req.file.originalname
-    }`;
+    const filePath = `${user.username}-profile-picture`;
 
     const { data, error } = await supabase.storage
       .from("profile-pictures")
-      .upload(filePath, req.file.buffer, { contentType: req.file.mimetype });
+      .upload(filePath, req.file.buffer, { contentType: req.file.mimetype, upsert: true });
 
     if (error) {
       throw new Error(`Supabase upload error: ${error.message}`);

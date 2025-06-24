@@ -38,6 +38,8 @@ Note: 👮🏼 Protected Routes require a valid JWT in the `Authorization` heade
 | ✅     | PUT    | /friends                                 | 👮🏼 Protected: Allows the logged in user to update their friends list to include another user                   |
 | ✅     | PUT    | /users/me/bio                            | 👮🏼 Protected: Allows the logged in user to update their bio                                                    |
 | ✅     | PUT    | /users/me/profile_picture                | 👮🏼 Protected: Allows the logged in user to update their profile picture                                        |
+| ❌     | DELETE | /friends/:username                       | 👮🏼 Protected: Users can delete friends from their friend's list                                                |
+| ❌     | DELETE | /messages/:message_id                    | 👮🏼 Protected: Deletes a specific message authored by the logged in user                                        |
 
 ---
 
@@ -53,10 +55,12 @@ Note: 👮🏼 Protected Routes require a valid JWT in the `Authorization` heade
 - ✅ Users can update their friends list to include other users
 - ✅ Users can update their bio
 - ✅ Users can upload their own profile pictures
+- ❌ Users can unfriend other users
+- ❌ Users can delete their own messages
 
 ---
 
-### Post Routes
+### POST Routes
 
 ---
 
@@ -154,7 +158,7 @@ Authorization: Bearer 'your-jwt-token'
 
 ---
 
-### Get Routes
+### GET Routes
 
 ---
 
@@ -307,7 +311,7 @@ Retrieves a specific users friends as an array of usernames
 
 ---
 
-### Put Routes
+### PUT Routes
 
 ---
 
@@ -385,5 +389,30 @@ Authorization: Bearer 'your-jwt-token'
 ```json
 {
   "message": "Succesfully updated your profile picture"
+}
+```
+
+---
+
+### POST Routes
+
+---
+
+**Method:** DELETE
+**Endpoint:** `/friends/:username`
+
+**Description:**
+
+Users can delete friends from their friend's list
+
+**Request Headers:**
+
+Authorization: Bearer 'your-jwt-token'
+
+**Example Response:**
+
+```json
+{
+  "message": "Removed JimDoe from your friends list"
 }
 ```

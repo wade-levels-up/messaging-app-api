@@ -74,7 +74,7 @@ beforeEach(async () => {
     if (!jimDoe) { throw new Error("Failed to initialize JimDoe user for test setup") }
 
 
-    // Update users Jim and John to have each other as friends
+    // Update users JimDoe and JohnDoe to have each other as friends
 
     await prisma.user.update({
         where: { id: String(johnDoe.id) },

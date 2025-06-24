@@ -177,7 +177,10 @@ export const getUserFriends = asyncHandler(async (req: Request, res: Response) =
             where: { username: req.params.username },
             include: { friends: true }
         });
-        if (!user) { res.send(404).json({ message: "User not found. Cannot retrieve friends" }); }
+        if (!user) { 
+            res.status(404).json({ message: "User not found. Cannot retrieve friends" });
+            return; 
+        }
 
         const rawUserFriendsData = user?.friends
         const safeUserFriendsData = rawUserFriendsData?.map((data) => {

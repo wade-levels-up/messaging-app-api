@@ -8,6 +8,7 @@ import { verifyUserRouter } from './routes/verifyUser';
 import { usersRouter } from './routes/users';
 import { conversationsRouter } from './routes/conversations';
 import { friendsRouter } from './routes/friends';
+import { messagesRouter } from './routes/messages';
 
 const app = express();
 
@@ -30,7 +31,10 @@ app.use('/verify-user', verifyUserRouter);
 app.use('/users', usersRouter);
 app.use('/conversations', conversationsRouter);
 app.use('/friends', friendsRouter);
+app.use('/messages', messagesRouter);
 
+
+// Catch missed routes
 app.use((req, res) => {
   console.log('Missed route:', req.method, req.originalUrl);
   res.status(404).send('Not found');

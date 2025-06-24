@@ -60,3 +60,32 @@ export const addFriend = asyncHandler(async (req: Request, res: Response) => {
         handleError(error)
     }
 })
+
+export const removeFriend = asyncHandler(async (req: Request, res: Response) => {
+    try {
+        // Collect a list of the logged in user's current friends
+        const user = await prisma.user.findUnique({
+            where: { id: (req as any).userId },
+            include: { friends: true, friendsOf: true },
+        });
+
+        const nameOfPersonToUnfriend = req.params.username;
+
+        // Check that the friend to be removed exists
+        const usernameInFriends = user?.friends.map((friend) => friend.username).includes(nameOfPersonToUnfriend)
+        if (!usernameInFriends) {
+            res.status(404).json({ message: `Can't find user: ${nameOfPersonToUnfriend} to delete`});
+            return;
+        }
+
+        // Disconnect the relation between the friend and the user
+        await prisma.user.update({
+            where: { id: (req as any).userId },
+            data: { friends: { disconnect: { username: nameOfPersonToUnfriend } } }
+        });
+        
+        res.status(200).json({ message: `Removed ${nameOfPersonToUnfriend} from your friends list` })
+    } catch(error) {
+        handleError(error)
+    }
+})

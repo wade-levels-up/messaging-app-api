@@ -54,7 +54,7 @@ test('User can delete friends from their friends list', async () => {
         .delete(`/friends/${nameOfPersonToUnfriend}`)
         .set("Authorization", `Bearer ${token}`)
         .expect("Content-Type", /json/)
-        .expect(204)
+        .expect(200)
         .expect({ message: `Removed ${nameOfPersonToUnfriend} from your friends list` })
 
     // Confirm that JohnDoe no longer has JimDoe as a friend
@@ -67,4 +67,4 @@ test('User can delete friends from their friends list', async () => {
     expect(response.body).toHaveProperty("friends");
     expect(Array.isArray(response.body.friends)).toBe(true);
     expect(response.body.friends).not.toContain("JimDoe");
-});
+})

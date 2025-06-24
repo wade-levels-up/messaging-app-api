@@ -38,7 +38,7 @@ Note: 👮🏼 Protected Routes require a valid JWT in the `Authorization` heade
 | ✅     | PUT    | /friends                                 | 👮🏼 Protected: Allows the logged in user to update their friends list to include another user                   |
 | ✅     | PUT    | /users/me/bio                            | 👮🏼 Protected: Allows the logged in user to update their bio                                                    |
 | ✅     | PUT    | /users/me/profile_picture                | 👮🏼 Protected: Allows the logged in user to update their profile picture                                        |
-| ❌     | DELETE | /friends/:username                       | 👮🏼 Protected: Users can delete friends from their friend's list                                                |
+| ✅     | DELETE | /friends/:username                       | 👮🏼 Protected: Users can delete friends from their friend's list                                                |
 | ❌     | DELETE | /messages/:message_id                    | 👮🏼 Protected: Deletes a specific message authored by the logged in user                                        |
 
 ---
@@ -394,7 +394,7 @@ Authorization: Bearer 'your-jwt-token'
 
 ---
 
-### POST Routes
+### DELETE Routes
 
 ---
 

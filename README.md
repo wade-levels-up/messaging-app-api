@@ -39,7 +39,7 @@ Note: 👮🏼 Protected Routes require a valid JWT in the `Authorization` heade
 | ✅     | PUT    | /users/me/bio                            | 👮🏼 Protected: Allows the logged in user to update their bio                                                    |
 | ✅     | PUT    | /users/me/profile_picture                | 👮🏼 Protected: Allows the logged in user to update their profile picture                                        |
 | ✅     | DELETE | /friends/:username                       | 👮🏼 Protected: Users can delete friends from their friend's list                                                |
-| ❌     | DELETE | /messages/:message_id                    | 👮🏼 Protected: Deletes a specific message authored by the logged in user                                        |
+| ✅     | DELETE | /messages/:message_id                    | 👮🏼 Protected: Deletes a specific message authored by the logged in user                                        |
 
 ---
 
@@ -55,8 +55,8 @@ Note: 👮🏼 Protected Routes require a valid JWT in the `Authorization` heade
 - ✅ Users can update their friends list to include other users
 - ✅ Users can update their bio
 - ✅ Users can upload their own profile pictures
-- ❌ Users can unfriend other users
-- ❌ Users can delete their own messages
+- ✅ Users can unfriend other users
+- ✅ Users can delete their own messages
 
 ---
 

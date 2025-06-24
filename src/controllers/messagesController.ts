@@ -27,7 +27,7 @@ export const deleteMessage = asyncHandler(async (req: Request, res: Response) =>
         messageToDelete.authorName !== user.username ||
         messageToDelete.userId !== user.id
         ) {
-        res.status(404).json({ message: "Unable to find message to delete" });
+        res.status(404).json({ message: "Unable to delete message" });
         return;
         }
 

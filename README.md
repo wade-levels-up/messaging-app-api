@@ -416,3 +416,24 @@ Authorization: Bearer 'your-jwt-token'
   "message": "Removed JimDoe from your friends list"
 }
 ```
+
+---
+
+**Method:** DELETE
+**Endpoint:** `/messages/:message_id`
+
+**Description:**
+
+Deletes a specific message authored by the logged in user
+
+**Request Headers:**
+
+Authorization: Bearer 'your-jwt-token'
+
+**Example Response:**
+
+```json
+{
+  "message": "Message succesfully deleted"
+}
+```

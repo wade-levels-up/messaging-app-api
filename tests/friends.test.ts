@@ -41,3 +41,30 @@ test("Users can update their friends list to include other users", async () => {
     expect(response.body).toHaveProperty("friends");
     expect(response.body.friends[1]).toBe("wadefoz");
 })
+
+test('User can delete friends from their friends list', async () => {
+    // Sign test user JohnDoe in and retrieve his token
+    const signInRes = await signInUser("johndoe@testmail.com", "SuperSecret11")
+    const token = signInRes.body.token;
+
+    const nameOfPersonToUnfriend = 'JimDoe'
+
+    // Remove JimDoe as a friend
+    await supertest(testApp)
+        .delete(`/friends/${nameOfPersonToUnfriend}`)
+        .set("Authorization", `Bearer ${token}`)
+        .expect("Content-Type", /json/)
+        .expect(204)
+        .expect({ message: `Removed ${nameOfPersonToUnfriend} from your friends list` })
+
+    // Confirm that JohnDoe no longer has JimDoe as a friend
+    const response = await supertest(testApp)
+        .get("/friends")
+        .set("Authorization", `Bearer ${token}`)
+        .expect("Content-Type", /json/)
+        .expect(200);
+    
+    expect(response.body).toHaveProperty("friends");
+    expect(Array.isArray(response.body.friends)).toBe(true);
+    expect(response.body.friends).not.toContain("JimDoe");
+});

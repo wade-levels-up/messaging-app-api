@@ -28,7 +28,7 @@ test("Users can update their friends list to include other users", async () => {
         .put(`/friends/${recipient}`)
         .set("Authorization", `Bearer ${token}`)
         .expect("Content-Type", /json/)
-        .expect({ message: `Succesfully added ${recipient} as a friend` })
+        .expect({ message: `Successfully added ${recipient} as a friend` })
         .expect(201);
 
     // Confirm that test user wadefoz is now in JohnDoe's friends list by retrieving JohnDoe's friends

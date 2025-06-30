@@ -58,7 +58,7 @@ export const addFriend = asyncHandler(async (req: Request, res: Response) => {
             data: { friends: { connect: { id: recipient.id } } }
         });
         
-        res.status(201).json({ message: `Succesfully added ${req.params[`username`]} as a friend` })
+        res.status(201).json({ message: `Successfully added ${req.params[`username`]} as a friend` })
     } catch(error) {
         handleError(error)
     }

@@ -217,7 +217,7 @@ export const updateBio = asyncHandler(async (req: Request<{}, {}, UpdateBioBody>
             }
         })
 
-        res.status(201).json({ message: 'Succesfully updated your bio'})
+        res.status(201).json({ message: 'Successfully updated your bio'})
     } catch(error) {
         handleError(error)
     }
@@ -255,7 +255,7 @@ export const updateProfilePicture = asyncHandler(async (req: Request, res: Respo
         data: { profile_picture_path: filePath }
     });
 
-    res.status(201).json({ message: 'Succesfully updated your profile picture'})
+    res.status(201).json({ message: 'Successfully updated your profile picture'})
   } catch (error) {
     handleError(error)
   }

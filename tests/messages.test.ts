@@ -24,7 +24,7 @@ test('Users can delete a specific message that belongs to them', async () => {
         .delete(`/messages/${idOfMessageToDelete}`)
         .set("Authorization", `Bearer ${token}`)
         .expect("Content-Type", /json/)
-        .expect({ message: `Message succesfully deleted` })
+        .expect({ message: `Message Successfully deleted` })
         .expect(200);
 
     // Retrieve JohnDoe's messages and confirm "Good morning!" message no longer exists

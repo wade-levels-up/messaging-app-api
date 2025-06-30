@@ -35,7 +35,7 @@ export const deleteMessage = asyncHandler(async (req: Request, res: Response) =>
             where: { id: messageIdToDelete }
         });
 
-        res.status(200).json({ message: 'Message succesfully deleted' })
+        res.status(200).json({ message: 'Message Successfully deleted' })
     } catch(error) {
         handleError(error);
     }

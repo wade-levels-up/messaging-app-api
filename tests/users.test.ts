@@ -175,7 +175,7 @@ test('Logged in user is able to update bio', async () => {
     .type("form")
     .send({ content: 'Hi my name is JohnDoe. I have a sister named JaneDoe and a brother named JimDoe'})
     .expect("Content-Type", /json/)
-    .expect({ message: "Succesfully updated your bio" })
+    .expect({ message: "Successfully updated your bio" })
     .expect(201);
 
   // Expect to see JohnDoe's bio updated when we retrieve his data the second time
@@ -222,7 +222,7 @@ test('Users can update the pathway to their profile picture file', async () => {
     .set("Authorization", `Bearer ${token}`)
     .attach("file", fileBuffer, newFileName)
     .expect("Content-Type", /json/)
-    .expect({ message: "Succesfully updated your profile picture" })
+    .expect({ message: "Successfully updated your profile picture" })
     .expect(201);
 
   // Confirm that the path to JohnDoe's new profile picture has been updated

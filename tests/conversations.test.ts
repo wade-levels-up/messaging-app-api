@@ -1,7 +1,6 @@
 import supertest from "supertest";
 import { testApp } from "./utils/testApp";
 import signInUser from "./utils/signInUser";
-import { handleError } from "../src/utils/handleError";
 
 test("User with access token can retrieve conversations", async () => {
     const signInRes = await signInUser("johndoe@testmail.com", "SuperSecret11")

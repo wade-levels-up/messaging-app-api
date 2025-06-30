@@ -63,7 +63,7 @@ test('User can delete friends from their friends list', async () => {
         .set("Authorization", `Bearer ${token}`)
         .expect("Content-Type", /json/)
         .expect(200);
-    
+
     expect(response.body).toHaveProperty("friends");
     expect(Array.isArray(response.body.friends)).toBe(true);
     expect(response.body.friends).not.toContain("JimDoe");

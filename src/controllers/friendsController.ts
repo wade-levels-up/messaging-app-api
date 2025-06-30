@@ -12,7 +12,7 @@ export const getMyFriends = asyncHandler(async (req: Request, res: Response) => 
         });
 
         if (!user) { 
-            res.send(404).json({ message: "User not found. Cannot retrieve friends" }); 
+            res.status(404).json({ message: "User not found. Cannot retrieve friends" }); 
             return;
         }
         

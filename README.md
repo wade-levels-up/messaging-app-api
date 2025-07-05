@@ -250,7 +250,7 @@ Authorization: Bearer 'your-jwt-token'
 ```json
 {
   "message": "Retrieved your user data",
-  "userData": { username, joined }
+  "userData": { username, joined, bio, profile_picture_path }
 }
 ```
 

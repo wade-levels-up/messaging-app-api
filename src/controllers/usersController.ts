@@ -125,7 +125,7 @@ export const getMyUserData = asyncHandler(async (req: Request, res: Response) =>
                 username: user.username,
                 joined: user.joined,
                 bio: user.bio,
-                profile_picture_path: user.profile_picture_path
+                profile_picture_path: `${process.env.SUPABASE_URL}${process.env.SUPABASE_RESOURCE_PATH}${user.profile_picture_path}`
             }
             : null;
 

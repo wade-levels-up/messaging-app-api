@@ -140,8 +140,15 @@ export const getMyUserData = asyncHandler(async (req: Request, res: Response) =>
 
 export const getAllUsersData = asyncHandler(async (req: Request, res: Response) => {
     try {
-        const allUsers = (await prisma.user.findMany({})).map((user) => user.username)
-        res.status(200).json({ message: "Retrieved all users", allUsers })
+        const allUsers = await prisma.user.findMany({})
+        const safeUsersData = allUsers.map((user) => {
+            return {
+                username: user.username,
+                profile_picture_path: `${process.env.SUPABASE_URL}${process.env.SUPABASE_RESOURCE_PATH}${user.profile_picture_path}`,
+                joined: user.joined
+            }
+        })
+        res.status(200).json({ message: "Retrieved all users", safeUsersData })
     } catch(error) {
         handleError(error);
     }

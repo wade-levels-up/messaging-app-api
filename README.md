@@ -212,7 +212,18 @@ Retrieves an array of all user's usernames.
 ```json
 {
   "message": "Retrieved all users.",
-  "allUsers": ["JohnDoe", "JaneDoe", "WadeFoz"]
+  "allUsers": [
+    {
+      "username": "JohnDoe",
+      "profile_picture_path": "http:/hostwebsite/johndoe",
+      "joined": "20/5/25"
+    },
+    {
+      "username": "JaneDoe",
+      "profile_picture_path": "http:/hostwebsite/janedoe",
+      "joined": "12/2/25"
+    }
+  ]
 }
 ```
 

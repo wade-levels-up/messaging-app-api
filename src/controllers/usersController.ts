@@ -125,7 +125,7 @@ export const getMyUserData = asyncHandler(async (req: Request, res: Response) =>
                 username: user.username,
                 joined: user.joined,
                 bio: user.bio,
-                profile_picture_path: `${process.env.SUPABASE_URL}${process.env.SUPABASE_RESOURCE_PATH}${user.profile_picture_path}`
+                profile_picture_path: user.profile_picture_path
             }
             : null;
 
@@ -144,7 +144,7 @@ export const getAllUsersData = asyncHandler(async (req: Request, res: Response) 
         const safeUsersData = allUsers.map((user) => {
             return {
                 username: user.username,
-                profile_picture_path: `${process.env.SUPABASE_URL}${process.env.SUPABASE_RESOURCE_PATH}${user.profile_picture_path}`,
+                profile_picture_path: user.profile_picture_path,
                 joined: user.joined
             }
         })
@@ -165,7 +165,7 @@ export const getUserData = asyncHandler(async (req: Request, res: Response) => {
                 username: user.username,
                 joined: user.joined,
                 bio: user.bio,
-                profile_picture_path: `${process.env.SUPABASE_URL}${process.env.SUPABASE_RESOURCE_PATH}${user.profile_picture_path}`
+                profile_picture_path: user.profile_picture_path
             }
             : null;
 
@@ -259,7 +259,7 @@ export const updateProfilePicture = asyncHandler(async (req: Request, res: Respo
 
     await prisma.user.update({
         where: { id: (req as any).userId }, 
-        data: { profile_picture_path: filePath }
+        data: { profile_picture_path: `${process.env.SUPABASE_URL}${process.env.SUPABASE_RESOURCE_PATH}${filePath}` }
     });
 
     res.status(201).json({ message: 'Successfully updated your profile picture'})

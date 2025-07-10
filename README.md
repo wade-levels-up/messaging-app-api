@@ -59,6 +59,7 @@ Note: 👮🏼 Protected Routes require a valid JWT in the `Authorization` heade
 | GET    | /users                                   | Retrieves an array of all the users as objects, containing username, profile picture path and their join date. usernames |
 | GET    | /users/:username                         | Retrieves a specific users data for purpose of displaying a users public profile                                         |
 | GET    | /users/me                                | 👮🏼 Protected: Retrieves the logged in user's data                                                                        |
+| GET    | /conversations                           | 👮🏼 Protected: Retrieves conversations of the logged in user                                                              |
 | GET    | /conversations/:conversation_id/messages | 👮🏼 Protected: Retrieves a specific conversation's messages for the id in the route parameter :conversation_id.           |
 | GET    | /friends                                 | 👮🏼 Protected: Retrieves an array of usernames that are friends of the logged in user                                     |
 | GET    | /users/:username/friends                 | Retrieves a specific users friends as an array of usernames                                                              |
@@ -262,6 +263,27 @@ Authorization: Bearer 'your-jwt-token'
 {
   "message": "Retrieved your user data",
   "userData": { username, joined, bio, profile_picture_path }
+}
+```
+
+---
+
+**Method:** GET
+**Endpoint:** `/conversations`
+
+**Description:**  
+Retrieves conversations of the logged in user
+
+**Request Headers:**
+
+Authorization: Bearer 'your-jwt-token'
+
+**Example Response:**
+
+```json
+{
+  "message": "Conversations retrieved",
+  "conversations": [12, 13, 15, 28]
 }
 ```
 

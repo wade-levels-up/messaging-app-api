@@ -39,7 +39,7 @@ export const getConversationMessages = asyncHandler(async (req: Request, res: Re
             where: {
                 id: Number(req.params["conversation_id"])
             },
-            include: { messages: { select: { content: true, authorName: true, createdAt: true} } }
+            include: { messages: { select: { content: true, authorName: true, createdAt: true, conversationId: true} } }
         })
 
         res.status(200).json({ message: "Conversations retrieved", conversationMessages: conversation?.messages});

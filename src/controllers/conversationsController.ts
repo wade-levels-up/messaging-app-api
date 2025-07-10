@@ -7,7 +7,7 @@ export const getUserConversations = asyncHandler(async (req: Request, res: Respo
     try {
         const user = await prisma.user.findUnique({
             where: { id: (req as any).userId },
-            include: { conversations: true }
+            include: { conversations: { include: { users: { select: { username: true } } } } } // Only return usernames
         });
 
         res.status(200).json({ message: "Conversations retrieved", conversations: user?.conversations});

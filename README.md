@@ -216,11 +216,13 @@ Retrieves an array of all the users as objects, containing username, profile pic
   "allUsers": [
     {
       "username": "JohnDoe",
+      "bio": "Hey my name is John Doe",
       "profile_picture_path": "http:/hostwebsite/johndoe",
       "joined": "20/5/25"
     },
     {
       "username": "JaneDoe",
+      "bio": "Hey my name is Jane Doe",
       "profile_picture_path": "http:/hostwebsite/janedoe",
       "joined": "12/2/25"
     }
@@ -241,7 +243,12 @@ Retrieves a specific users data for purpose of displaying a users public profile
 ```json
 {
   "message": "User data retrieved",
-  "userData": { username, joined }
+  "userData": {
+    "username": "JohnDoe",
+    "bio": "Hey my name is John Doe",
+    "profile_picture_path": "http:/hostwebsite/johndoe",
+    "joined": "20/5/25"
+  }
 }
 ```
 

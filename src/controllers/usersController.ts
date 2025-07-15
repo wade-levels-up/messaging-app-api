@@ -11,6 +11,10 @@ import crypto from 'crypto';
 import bcrypt from "bcryptjs";
 import { default as jwt } from 'jsonwebtoken';
 
+interface MulterRequest extends Request {
+  file?: Express.Multer.File;
+}
+
 
 
 interface SignUpBody {
@@ -250,7 +254,7 @@ export const updateBio = asyncHandler(async (req: Request<{}, {}, UpdateBioBody>
     }
 })
 
-export const updateProfilePicture = asyncHandler(async (req: Request, res: Response) => {
+export const updateProfilePicture = asyncHandler(async (req: MulterRequest, res: Response) => {
   try {
     // Get the users data
     const user = await prisma.user.findUnique({

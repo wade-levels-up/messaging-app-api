@@ -36,11 +36,11 @@ export const addFriend = asyncHandler(async (req: Request, res: Response) => {
         });
 
         // Check that the friend to be added doesn't already exist in the list
-        user?.friends.forEach((friend) => {
-            if (friend.username === req.params[`username`]) {
-                res.status(404).json({ message: `Cannot update friends list. User: ${req.params[`username`]} is already a friend` })     
-            }
-        })
+        const alreadyFriend = user?.friends.some(friend => friend.username === req.params.username);
+        if (alreadyFriend) {
+            res.status(404).json({ message: `Cannot update friends list. User: ${req.params.username} is already a friend` });
+            return;
+        }
 
         // Retrieve the friend to be added to access their ID
         const recipient = await prisma.user.findUnique({

@@ -49,25 +49,25 @@ The below variables are stored in a .env file located at the root of the api. Ta
 
 Note: 👮🏼 Protected Routes require a valid JWT in the `Authorization` header. A valid JWT is obtained using the /signup and /signin routes.
 
-| Method | Path                                     | Action / Resource                                                                                                        |
-| ------ | ---------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
-| POST   | /signup                                  | Creates a new user account                                                                                               |
-| POST   | /signin                                  | Signs a user into their account and returns a JWT to the browser                                                         |
-| POST   | /conversations                           | 👮🏼 Protected: Creates a new conversation between the logged in user and another user                                     |
-| POST   | /conversations/:conversation_id/messages | 👮🏼 Protected: Creates a new message within a specific conversation from a logged in user                                 |
-| GET    | /verify-user?token=...                   | Account email verification - Verifies a user's email address using the token sent to their email.                        |
-| GET    | /users                                   | Retrieves an array of all the users as objects, containing username, profile picture path and their join date. usernames |
-| GET    | /users/:username                         | Retrieves a specific users data for purpose of displaying a users public profile                                         |
-| GET    | /users/me                                | 👮🏼 Protected: Retrieves the logged in user's data                                                                        |
-| GET    | /conversations                           | 👮🏼 Protected: Retrieves conversations of the logged in user                                                              |
-| GET    | /conversations/:conversation_id/messages | 👮🏼 Protected: Retrieves a specific conversation's messages for the id in the route parameter :conversation_id.           |
-| GET    | /friends                                 | 👮🏼 Protected: Retrieves an array of usernames that are friends of the logged in user                                     |
-| GET    | /users/:username/friends                 | Retrieves a specific users friends as an array of usernames                                                              |
-| PUT    | /friends                                 | 👮🏼 Protected: Allows the logged in user to update their friends list to include another user                             |
-| PUT    | /users/me/bio                            | 👮🏼 Protected: Allows the logged in user to update their bio                                                              |
-| PUT    | /users/me/profile_picture                | 👮🏼 Protected: Allows the logged in user to update their profile picture                                                  |
-| DELETE | /friends/:username                       | 👮🏼 Protected: Users can delete friends from their friend's list                                                          |
-| DELETE | /messages/:message_id                    | 👮🏼 Protected: Deletes a specific message authored by the logged in user                                                  |
+| Method | Path                                     | Action / Resource                                                                                                                                         |
+| ------ | ---------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| POST   | /signup                                  | Creates a new user account                                                                                                                                |
+| POST   | /signin                                  | Signs a user into their account and returns a JWT to the browser                                                                                          |
+| POST   | /conversations                           | 👮🏼 Protected: Creates a new conversation between the logged in user and another user                                                                      |
+| POST   | /conversations/:conversation_id/messages | 👮🏼 Protected: Creates a new message within a specific conversation from a logged in user                                                                  |
+| GET    | /verify-user?token=...                   | Account email verification - Verifies a user's email address using the token sent to their email.                                                         |
+| GET    | /users                                   | Retrieves an array of all the users as objects, containing username, profile picture path, their join date as well as a list of their friend's usernames. |
+| GET    | /users/:username                         | Retrieves a specific users data for purpose of displaying a users public profile                                                                          |
+| GET    | /users/me                                | 👮🏼 Protected: Retrieves the logged in user's data                                                                                                         |
+| GET    | /conversations                           | 👮🏼 Protected: Retrieves conversations of the logged in user                                                                                               |
+| GET    | /conversations/:conversation_id/messages | 👮🏼 Protected: Retrieves a specific conversation's messages for the id in the route parameter :conversation_id.                                            |
+| GET    | /friends                                 | 👮🏼 Protected: Retrieves an array of usernames that are friends of the logged in user                                                                      |
+| GET    | /users/:username/friends                 | Retrieves a specific users friends as an array of usernames                                                                                               |
+| PUT    | /friends                                 | 👮🏼 Protected: Allows the logged in user to update their friends list to include another user                                                              |
+| PUT    | /users/me/bio                            | 👮🏼 Protected: Allows the logged in user to update their bio                                                                                               |
+| PUT    | /users/me/profile_picture                | 👮🏼 Protected: Allows the logged in user to update their profile picture                                                                                   |
+| DELETE | /friends/:username                       | 👮🏼 Protected: Users can delete friends from their friend's list                                                                                           |
+| DELETE | /messages/:message_id                    | 👮🏼 Protected: Deletes a specific message authored by the logged in user                                                                                   |
 
 ---
 
@@ -206,7 +206,7 @@ Verifies a user's email address using the token sent to their email.
 **Endpoint:** `/users`
 
 **Description:**  
-Retrieves an array of all the users as objects, containing username, profile picture path and their join date.
+Retrieves an array of all the users as objects, containing username, profile picture path, their join date as well as a list of their friend's usernames.
 
 **Example Response:**
 
@@ -218,13 +218,15 @@ Retrieves an array of all the users as objects, containing username, profile pic
       "username": "JohnDoe",
       "bio": "Hey my name is John Doe",
       "profile_picture_path": "http:/hostwebsite/johndoe",
-      "joined": "20/5/25"
+      "joined": "20/5/25",
+      "friends:": ["JaneDoe", "JimDoe"]
     },
     {
       "username": "JaneDoe",
       "bio": "Hey my name is Jane Doe",
       "profile_picture_path": "http:/hostwebsite/janedoe",
-      "joined": "12/2/25"
+      "joined": "12/2/25",
+      "friends:": ["JohnDoe", "JimDoe"]
     }
   ]
 }

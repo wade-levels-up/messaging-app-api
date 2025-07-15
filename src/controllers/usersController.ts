@@ -151,12 +151,21 @@ export const getMyUserData = asyncHandler(async (req: Request, res: Response) =>
 
 export const getAllUsersData = asyncHandler(async (req: Request, res: Response) => {
     try {
-        const allUsers = await prisma.user.findMany({})
+        const allUsers = await prisma.user.findMany({
+            include: {
+                friends: {
+                    select: {
+                        username: true,
+                    }
+                }
+            }
+        })
         const safeUsersData = allUsers.map((user) => {
             return {
                 username: user.username,
                 profile_picture_path: user.profile_picture_path,
-                joined: user.joined
+                joined: user.joined,
+                friends: user.friends
             }
         })
         res.status(200).json({ message: "Retrieved all users", safeUsersData })

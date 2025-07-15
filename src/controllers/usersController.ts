@@ -130,6 +130,11 @@ export const getMyUserData = asyncHandler(async (req: Request, res: Response) =>
                         joined: true,
                         bio: true
                     }
+                },
+                friendsOf: {
+                    select: {
+                        username: true
+                    }
                 }
             }
         });
@@ -140,7 +145,8 @@ export const getMyUserData = asyncHandler(async (req: Request, res: Response) =>
                 joined: user.joined,
                 bio: user.bio,
                 profile_picture_path: user.profile_picture_path,
-                friends: user.friends
+                friends: user.friends,
+                friendsOf: user.friendsOf
             }
             : null;
 
@@ -161,6 +167,11 @@ export const getAllUsersData = asyncHandler(async (req: Request, res: Response) 
                     select: {
                         username: true,
                     }
+                },
+                friendsOf: {
+                    select: {
+                        username: true
+                    }
                 }
             }
         })
@@ -169,7 +180,8 @@ export const getAllUsersData = asyncHandler(async (req: Request, res: Response) 
                 username: user.username,
                 profile_picture_path: user.profile_picture_path,
                 joined: user.joined,
-                friends: user.friends
+                friends: user.friends,
+                friendsOf: user.friendsOf
             }
         })
         res.status(200).json({ message: "Retrieved all users", safeUsersData })

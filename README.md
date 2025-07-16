@@ -56,7 +56,7 @@ Note: 👮🏼 Protected Routes require a valid JWT in the `Authorization` heade
 | POST   | /conversations                           | 👮🏼 Protected: Creates a new conversation between the logged in user and another user                                                                                         |
 | POST   | /conversations/:conversation_id/messages | 👮🏼 Protected: Creates a new message within a specific conversation from a logged in user                                                                                     |
 | GET    | /verify-user?token=...                   | Account email verification - Verifies a user's email address using the token sent to their email.                                                                            |
-| GET    | /users                                   | Retrieves an array of all the users as objects, containing username, profile picture path, their join date and a list of their friend's and users they are friends of.       |
+| GET    | /users                                   | Retrieves an array of all the users as objects, containing username, profile picture path and their join date.                                                               |
 | GET    | /users/:username                         | Retrieves a specific users data for purpose of displaying a users public profile                                                                                             |
 | GET    | /users/me                                | 👮🏼 Protected: Retrieves the logged in user's data, including a list of who they are friends of.                                                                              |
 | GET    | /conversations                           | 👮🏼 Protected: Retrieves conversations of the logged in user                                                                                                                  |
@@ -206,7 +206,7 @@ Verifies a user's email address using the token sent to their email.
 **Endpoint:** `/users`
 
 **Description:**  
-Retrieves an array of all the users as objects, containing username, profile picture path, their join date and a list of their friend's and users they are friends of.
+Retrieves an array of all the users as objects, containing username, profile picture path and their join date.
 
 **Example Response:**
 
@@ -218,17 +218,13 @@ Retrieves an array of all the users as objects, containing username, profile pic
       "username": "JohnDoe",
       "bio": "Hey my name is John Doe",
       "profile_picture_path": "http:/hostwebsite/johndoe",
-      "joined": "20/5/25",
-      "friends:": [{ "username": "JimDoe" }],
-      "friendsOf:" [{ "username": "JaneDoe" }, { "username": "JimDoe" }]
+      "joined": "20/5/25"
     },
     {
       "username": "JaneDoe",
       "bio": "Hey my name is Jane Doe",
       "profile_picture_path": "http:/hostwebsite/janedoe",
-      "joined": "12/2/25",
-      "friends:": [{ "username": "JimDoe" }],
-      "friendsOf:": [{ "username": "JohnDoe" }, { "username": "JimDoe" }]
+      "joined": "12/2/25"
     }
   ]
 }

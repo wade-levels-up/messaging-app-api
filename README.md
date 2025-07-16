@@ -58,7 +58,7 @@ Note: 👮🏼 Protected Routes require a valid JWT in the `Authorization` heade
 | GET    | /verify-user?token=...                   | Account email verification - Verifies a user's email address using the token sent to their email.                                                                            |
 | GET    | /users                                   | Retrieves an array of all the users as objects, containing username, profile picture path, their join date and a list of their friend's and users they are friends of.       |
 | GET    | /users/:username                         | Retrieves a specific users data for purpose of displaying a users public profile                                                                                             |
-| GET    | /users/me                                | 👮🏼 Protected: Retrieves the logged in user's data, including a list of their friends and also who they are friends of data                                                   |
+| GET    | /users/me                                | 👮🏼 Protected: Retrieves the logged in user's data, including a list of who they are friends of.                                                                              |
 | GET    | /conversations                           | 👮🏼 Protected: Retrieves conversations of the logged in user                                                                                                                  |
 | GET    | /conversations/:conversation_id/messages | 👮🏼 Protected: Retrieves a specific conversation's messages for the id in the route parameter :conversation_id.                                                               |
 | GET    | /friends                                 | 👮🏼 Protected: Retrieves an array of users that are friends of the logged in user. The friend objects contain their username, profile picture path, bio and joined date. user |
@@ -262,7 +262,7 @@ Retrieves a specific users data for purpose of displaying a users public profile
 **Endpoint:** `/users/me`
 
 **Description:**  
-Retrieves the logged in user's data, including a list of their friends and also who they are friends of. See GET /users endpoint above for breakdown of friends and friendsOf
+Retrieves the logged in user's data, including a list of who they are friends of.
 
 **Request Headers:**
 
@@ -273,7 +273,7 @@ Authorization: Bearer 'your-jwt-token'
 ```json
 {
   "message": "Retrieved your user data",
-  "userData": { username, joined, bio, profile_picture_path, friends, friendsOf }
+  "userData": { username, joined, bio, profile_picture_path, friendsOf }
 }
 ```
 

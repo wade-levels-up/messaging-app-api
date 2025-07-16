@@ -123,14 +123,6 @@ export const getMyUserData = asyncHandler(async (req: Request, res: Response) =>
         const user = await prisma.user.findUnique({
             where: { id: (req as any).userId },
             include: {
-                friends: {
-                    select: {
-                        username: true,
-                        profile_picture_path: true,
-                        joined: true,
-                        bio: true
-                    }
-                },
                 friendsOf: {
                     select: {
                         username: true
@@ -145,7 +137,6 @@ export const getMyUserData = asyncHandler(async (req: Request, res: Response) =>
                 joined: user.joined,
                 bio: user.bio,
                 profile_picture_path: user.profile_picture_path,
-                friends: user.friends,
                 friendsOf: user.friendsOf
             }
             : null;

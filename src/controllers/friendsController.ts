@@ -18,7 +18,12 @@ export const getMyFriends = asyncHandler(async (req: Request, res: Response) => 
         
         const rawUserFriendsData = user?.friends
         const safeUserFriendsData = rawUserFriendsData?.map((data) => {
-            return data.username
+            return {
+                username: data.username,
+                profile_picture_path: data.profile_picture_path,
+                bio: data.bio,
+                joined: data.joined
+            }
         })
 
         res.status(200).json({ message: 'Retrieved your friends', friends: safeUserFriendsData})

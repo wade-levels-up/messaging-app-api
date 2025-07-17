@@ -41,9 +41,9 @@ export const addFriend = asyncHandler(async (req: Request, res: Response) => {
         });
 
         // Check that the friend to be added doesn't already exist in the list
-        const alreadyFriend = user?.friends.some(friend => friend.username === req.params.username);
+        const alreadyFriend = user?.friendsOf.some(friend => friend.username === req.params[`username`]);
         if (alreadyFriend) {
-            res.status(404).json({ message: `Cannot update friends list. User: ${req.params.username} is already a friend` });
+            res.status(404).json({ message: `Cannot update friends list. User: ${req.params[`username`]} is already a friend` });
             return;
         }
 
@@ -60,7 +60,7 @@ export const addFriend = asyncHandler(async (req: Request, res: Response) => {
         // If the friend doesn't already exist, update the friend's list to include them
         await prisma.user.update({
             where: { id: (req as any).userId },
-            data: { friends: { connect: { id: recipient.id } } }
+            data: { friendsOf: { connect: { id: recipient.id } } }
         });
         
         res.status(201).json({ message: `Successfully added ${req.params[`username`]} as a friend` })
@@ -89,7 +89,9 @@ export const removeFriend = asyncHandler(async (req: Request, res: Response) => 
         // Disconnect the relation between the friend and the user
         await prisma.user.update({
             where: { id: (req as any).userId },
-            data: { friends: { disconnect: { username: nameOfPersonToUnfriend } } }
+            data: { friends: { disconnect: { username: nameOfPersonToUnfriend } },
+                    friendsOf:  { disconnect: { username: nameOfPersonToUnfriend }}
+        }
         });
         
         res.status(200).json({ message: `Removed ${nameOfPersonToUnfriend} from your friends list` })

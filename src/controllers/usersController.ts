@@ -154,11 +154,6 @@ export const getAllUsersData = asyncHandler(async (req: Request, res: Response) 
     try {
         const allUsers = await prisma.user.findMany({
             include: {
-                friends: {
-                    select: {
-                        username: true,
-                    }
-                },
                 friendsOf: {
                     select: {
                         username: true
@@ -171,7 +166,6 @@ export const getAllUsersData = asyncHandler(async (req: Request, res: Response) 
                 username: user.username,
                 profile_picture_path: user.profile_picture_path,
                 joined: user.joined,
-                friends: user.friends,
                 friendsOf: user.friendsOf
             }
         })

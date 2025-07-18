@@ -80,7 +80,7 @@ export const removeFriend = asyncHandler(async (req: Request, res: Response) => 
         const nameOfPersonToUnfriend = req.params.username;
 
         // Check that the friend to be removed exists
-        const usernameInFriends = user?.friends.map((friend) => friend.username).includes(nameOfPersonToUnfriend)
+        const usernameInFriends = user?.friendsOf.map((friend) => friend.username).includes(nameOfPersonToUnfriend)
         if (!usernameInFriends) {
             res.status(404).json({ message: `Can't find user: ${nameOfPersonToUnfriend} to delete`});
             return;

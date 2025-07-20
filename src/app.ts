@@ -9,8 +9,16 @@ import { usersRouter } from './routes/users';
 import { conversationsRouter } from './routes/conversations';
 import { friendsRouter } from './routes/friends';
 import { messagesRouter } from './routes/messages';
+import { Server } from "socket.io"
+import { createServer } from 'node:http';
 
 const app = express();
+const server = createServer(app);
+const io = new Server(server, {
+  cors: {
+    origin: process.env.CLIENT,
+  }
+});
 
 // Server Configuration
 
@@ -33,6 +41,15 @@ app.use('/conversations', conversationsRouter);
 app.use('/friends', friendsRouter);
 app.use('/messages', messagesRouter);
 
+// Websocket 
+
+io.on('connection', (socket) => {
+  console.log(`A user connected on socket id:${socket.id}`);
+    socket.on('chat message', (msg) => io.emit('chat message', msg + " server dust..."))
+    socket.on('disconnect', () => {
+    console.log('user disconnected');
+  });
+});
 
 // Catch missed routes
 app.use((req, res) => {
@@ -47,4 +64,4 @@ app.use((error: any, req: Request, res: Response, next:NextFunction) => {
   res.status(error.statusCode || 500).json({ message: error.message });
 });
 
-export default app;
+export default server;

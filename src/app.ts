@@ -11,6 +11,7 @@ import { friendsRouter } from './routes/friends';
 import { messagesRouter } from './routes/messages';
 import { Server } from "socket.io"
 import { createServer } from 'node:http';
+import { createMessage } from './socket/chatHandlers';
 
 const app = express();
 const server = createServer(app);
@@ -45,8 +46,22 @@ app.use('/messages', messagesRouter);
 
 io.on('connection', (socket) => {
   console.log(`A user connected on socket id:${socket.id}`);
-    socket.on('chat message', (msg) => io.emit('chat message', msg + " server dust..."))
-    socket.on('disconnect', () => {
+
+  socket.on("join conversation", (conversationId: string) => {
+    console.log(`User joined conversation ${conversationId}`);
+    socket.join(String(conversationId));
+  });
+
+  socket.on("leave conversation", (conversationId: string) => {
+    console.log(`User left conversation ${conversationId}`);
+    socket.leave(String(conversationId));
+  });
+
+  socket.on('chat message', (data) => {
+    createMessage(io, socket, data);
+  });
+
+  socket.on('disconnect', () => {
     console.log('user disconnected');
   });
 });

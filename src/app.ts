@@ -12,6 +12,14 @@ import { messagesRouter } from './routes/messages';
 import { Server } from "socket.io"
 import { createServer } from 'node:http';
 import { createMessage } from './socket/chatHandlers';
+import { default as jwt } from "jsonwebtoken"
+import 'socket.io';
+
+declare module 'socket.io' {
+  interface Socket {
+    user?: any; 
+  }
+}
 
 const allowedOrigins = ["http://localhost:5173", "http://localhost:5174"];
 
@@ -48,7 +56,20 @@ app.use('/conversations', conversationsRouter);
 app.use('/friends', friendsRouter);
 app.use('/messages', messagesRouter);
 
-// Websocket 
+// Websockets / Socket.io
+
+io.use((socket, next) => {
+  const token = socket.handshake.auth.token;
+  if (!token) {
+    return next(new Error ('Authentication error'));
+  }
+
+  jwt.verify(token, process.env.JWT_SECRET_KEY!, (err: Error | null, user: unknown) => {
+    if (err) return next(new Error("Authentication error"));
+    socket.user = user;
+    next();
+  })
+})
 
 io.on('connection', (socket) => {
   console.log(`A user connected on socket id:${socket.id}`);

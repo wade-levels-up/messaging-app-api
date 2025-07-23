@@ -3,11 +3,6 @@ import { Request, Response, NextFunction } from 'express';
 
 export function decodeAndAttachJWT(req: Request, res: Response, next:NextFunction): void {
 
-  if (!req.headers['authorization']) {
-      res.status(401).json({ message: "No token provided" });
-      return
-  }
-
   const authHeader = req.headers["authorization"];
   if (!authHeader) {
      res.status(401).json({ message: "Authorization header missing" });

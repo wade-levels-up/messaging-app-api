@@ -13,21 +13,27 @@ import { Server } from "socket.io"
 import { createServer } from 'node:http';
 import { createMessage } from './socket/chatHandlers';
 
+const allowedOrigins = ["http://localhost:5173", "http://localhost:5174"];
+
 const app = express();
 const server = createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: process.env.CLIENT,
+    origin: ["http://localhost:5173", "http://localhost:5174"],
   }
 });
 
 // Server Configuration
 
-app.use(
-  cors({
-    origin: `${process.env.CLIENT}`,
-  })
-);
+app.use(cors({
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  }
+}));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));

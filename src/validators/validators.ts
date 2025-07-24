@@ -38,5 +38,6 @@ export const validateBio: ValidationChain[] = [
   .trim()
   .isLength({ min: 1})
   .withMessage("Bio must be greater than 1 character")
-  .escape()
+  .matches(/^[^<>]*$/)
+  .withMessage("Bio cannot contain < or > characters")
 ]

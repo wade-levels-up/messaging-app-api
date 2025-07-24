@@ -15,11 +15,13 @@ export const validateUsername: ValidationChain[] = [
     .isLength({ min: 2, max: 24 })
     .withMessage("Username must be between 2 and 24 characters")
     .matches(/^\S+$/)
-    .withMessage("Name cannot contain spaces"),
+    .withMessage("Name cannot contain spaces")
+    .escape()
 ];
 
 export const validatePassword: ValidationChain[] = [
   body("password")
+    .trim()
     .isLength({ min: 8 })
     .withMessage("Password must be greater than 8 characters")
     .matches(/[a-z]/)
@@ -30,3 +32,11 @@ export const validatePassword: ValidationChain[] = [
     .isIn(['password', '12345678', 'qwerty'])
     .withMessage("Do not use a common, easily guessed password")
 ];
+
+export const validateBio: ValidationChain[] = [
+  body("content")
+  .trim()
+  .isLength({ min: 1})
+  .withMessage("Bio must be greater than 1 character")
+  .escape()
+]

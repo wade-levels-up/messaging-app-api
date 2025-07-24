@@ -4,7 +4,7 @@ import { supabase } from "../utils/supabaseClient";
 import asyncHandler from 'express-async-handler';
 import prisma from '../utils/prismaClient';
 import { PrismaClient } from '@prisma/client';
-import { validateUsername, validateEmail, validatePassword } from '../validators/signUpValidators';
+import { validateUsername, validateEmail, validatePassword, validateBio } from '../validators/validators';
 import { handleValidationError } from '../utils/handleValidationError';
 import { sendVerificationEmail } from '../utils/sendEmail';
 import crypto from 'crypto';
@@ -225,7 +225,9 @@ interface UpdateBioBody {
   content: string;
 }
 
-export const updateBio = asyncHandler(async (req: Request<{}, {}, UpdateBioBody>, res: Response) => {
+export const updateBio = [ 
+    validateBio, 
+    asyncHandler(async (req: Request<{}, {}, UpdateBioBody>, res: Response) => {
     try {
         const user = await prisma.user.findUnique({
             where: { id: (req as any).userId }
@@ -249,7 +251,7 @@ export const updateBio = asyncHandler(async (req: Request<{}, {}, UpdateBioBody>
     } catch(error) {
         handleError(error)
     }
-})
+})]
 
 export const updateProfilePicture = asyncHandler(async (req: MulterRequest, res: Response) => {
   try {

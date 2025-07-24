@@ -229,6 +229,8 @@ export const updateBio = [
     validateBio, 
     asyncHandler(async (req: Request<{}, {}, UpdateBioBody>, res: Response) => {
     try {
+        handleValidationError(req)
+        
         const user = await prisma.user.findUnique({
             where: { id: (req as any).userId }
         });

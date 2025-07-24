@@ -6,7 +6,7 @@ import { upload } from '../middleware/multer';
 const usersRouter = Router();
 
 usersRouter.put("/me/profile_picture", decodeAndAttachJWT, upload.single("file"), updateProfilePicture)
-usersRouter.put("/me/bio", decodeAndAttachJWT, updateBio);
+usersRouter.put("/me/bio", decodeAndAttachJWT, ...updateBio);
 usersRouter.get("/me", decodeAndAttachJWT, getMyUserData);
 usersRouter.get("/:username/friends", getUserFriends)
 usersRouter.get("/:username", getUserData);

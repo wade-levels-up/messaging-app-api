@@ -72,24 +72,16 @@ io.use((socket, next) => {
 })
 
 io.on('connection', (socket) => {
-  console.log(`A user connected on socket id:${socket.id}`);
-
   socket.on("join conversation", (conversationId: string) => {
-    console.log(`User joined conversation ${conversationId}`);
     socket.join(String(conversationId));
   });
 
   socket.on("leave conversation", (conversationId: string) => {
-    console.log(`User left conversation ${conversationId}`);
     socket.leave(String(conversationId));
   });
 
   socket.on('chat message', (data) => {
     createMessage(io, socket, data);
-  });
-
-  socket.on('disconnect', () => {
-    console.log('user disconnected');
   });
 });
 

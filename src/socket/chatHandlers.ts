@@ -24,8 +24,8 @@ export const createMessage = async (
             return;
         }
 
-        // Sanitize content
-        const safeContent = validator.escape(content.trim());
+        // Trim content
+        const trimmedContent = content.trim();
 
 
         const existingConversation = await prisma.conversation.findUnique({ where: { id: conversationId } });
@@ -36,7 +36,7 @@ export const createMessage = async (
 
         await prisma.message.create({
             data: {
-                content: safeContent,
+                content: trimmedContent,
                 authorName: sender,
                 user: { connect: { username: sender } },
                 conversation: { connect: { id: conversationId } }

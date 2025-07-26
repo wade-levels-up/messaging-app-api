@@ -2,6 +2,8 @@ import { Request, Response } from 'express';
 import { handleError } from '../utils/handleError';
 import asyncHandler from 'express-async-handler';
 import prisma from '../utils/prismaClient';
+import { validateContent } from '../validators/validators';
+import { handleValidationError } from '../utils/handleValidationError';
 
 export const getUserConversations = asyncHandler(async (req: Request, res: Response) => {
     try {
@@ -51,12 +53,15 @@ export const getConversationMessages = asyncHandler(async (req: Request, res: Re
 interface NewConversationBody {
   sender: string;
   recipient: string;
-  openingMessage: string;
+  content: string;
 }
 
-export const createConversation = asyncHandler(async (req: Request<{}, {}, NewConversationBody>, res: Response) => {
+export const createConversation = [
+    validateContent,
+    asyncHandler(async (req: Request<{}, {}, NewConversationBody>, res: Response) => {
     try {
-        const { sender, recipient, openingMessage } = req.body
+        handleValidationError(req)
+        const { sender, recipient, content } = req.body
 
         const existingConversation = await prisma.conversation.findFirst({
             where: {
@@ -80,11 +85,11 @@ export const createConversation = asyncHandler(async (req: Request<{}, {}, NewCo
                         { username: recipient}
                     ]
                 },
-                lastMessage: openingMessage,
+                lastMessage: content,
                 messages: {
                     create: [
                         {
-                            content: openingMessage,
+                            content: content,
                             authorName: sender,
                             userId: (req as any).userId,
                         }
@@ -98,14 +103,18 @@ export const createConversation = asyncHandler(async (req: Request<{}, {}, NewCo
         handleError(error);
     }    
 })
+]
 
 interface NewMessageBody {
   sender: string;
   content: string;
 }
 
-export const createMessage = asyncHandler(async (req: Request<Record<string, string>, {}, NewMessageBody>, res: Response) => {
+export const createMessage = [
+    validateContent,
+    asyncHandler(async (req: Request<Record<string, string>, {}, NewMessageBody>, res: Response) => {
     try {
+        handleValidationError(req)
         const { sender, content } = req.body
         const conversationId = Number(req.params.conversation_id);
 
@@ -129,3 +138,4 @@ export const createMessage = asyncHandler(async (req: Request<Record<string, str
         handleError(error);
     }    
 })
+]

@@ -33,11 +33,11 @@ export const validatePassword: ValidationChain[] = [
     .withMessage("Do not use a common, easily guessed password")
 ];
 
-export const validateBio: ValidationChain[] = [
+export const validateContent: ValidationChain[] = [
   body("content")
   .trim()
   .isLength({ min: 1})
-  .withMessage("Bio must be greater than 1 character")
+  .withMessage("Text must be greater than 1 character")
   .matches(/^[^<>]*$/)
-  .withMessage("Bio cannot contain < or > characters")
+  .withMessage("Text cannot contain < or > characters")
 ]

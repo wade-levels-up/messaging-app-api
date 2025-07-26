@@ -4,7 +4,7 @@ import { supabase } from "../utils/supabaseClient";
 import asyncHandler from 'express-async-handler';
 import prisma from '../utils/prismaClient';
 import { PrismaClient } from '@prisma/client';
-import { validateUsername, validateEmail, validatePassword, validateBio } from '../validators/validators';
+import { validateUsername, validateEmail, validatePassword, validateContent } from '../validators/validators';
 import { handleValidationError } from '../utils/handleValidationError';
 import { sendVerificationEmail } from '../utils/sendEmail';
 import crypto from 'crypto';
@@ -226,7 +226,7 @@ interface UpdateBioBody {
 }
 
 export const updateBio = [ 
-    validateBio, 
+    validateContent, 
     asyncHandler(async (req: Request<{}, {}, UpdateBioBody>, res: Response) => {
     try {
         handleValidationError(req)

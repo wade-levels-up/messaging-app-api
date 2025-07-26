@@ -1,5 +1,6 @@
 import prisma from '../utils/prismaClient';
 import { Socket, Server } from "socket.io";
+import validator from 'validator';
 
 type CreateMessageArgs = {
     content: string;
@@ -13,6 +14,20 @@ export const createMessage = async (
     { conversationId, content, sender }: CreateMessageArgs
 ) => {
     try {
+        // Validate content
+        if (typeof content !== 'string' || validator.isEmpty(content.trim())) {
+            socket.emit('error', { message: 'Message content cannot be empty.' });
+            return;
+        }
+        if (!validator.matches(content, /^[^<>]*$/)) {
+            socket.emit('error', { message: 'Message content cannot contain < or > characters.' });
+            return;
+        }
+
+        // Sanitize content
+        const safeContent = validator.escape(content.trim());
+
+
         const existingConversation = await prisma.conversation.findUnique({ where: { id: conversationId } });
         if (!existingConversation) {
             socket.to(String(conversationId)).emit('error', { message: `Can't find conversation. Unable to create message` });
@@ -21,7 +36,7 @@ export const createMessage = async (
 
         await prisma.message.create({
             data: {
-                content: content,
+                content: safeContent,
                 authorName: sender,
                 user: { connect: { username: sender } },
                 conversation: { connect: { id: conversationId } }

@@ -14,6 +14,7 @@ import { createServer } from 'node:http';
 import { createMessage } from './socket/chatHandlers';
 import { default as jwt } from "jsonwebtoken"
 import 'socket.io';
+import compression from "compression";
 
 declare module 'socket.io' {
   interface Socket {
@@ -45,6 +46,7 @@ app.use(cors({
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(compression());
 
 // Routes
 

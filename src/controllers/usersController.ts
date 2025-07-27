@@ -10,6 +10,7 @@ import { sendVerificationEmail } from '../utils/sendEmail';
 import crypto from 'crypto';
 import bcrypt from "bcryptjs";
 import { default as jwt } from 'jsonwebtoken';
+import sharp from 'sharp';
 
 interface MulterRequest extends Request {
   file?: Express.Multer.File;
@@ -166,7 +167,8 @@ export const getAllUsersData = asyncHandler(async (req: Request, res: Response) 
                 username: user.username,
                 profile_picture_path: user.profile_picture_path,
                 joined: user.joined,
-                friendsOf: user.friendsOf
+                friendsOf: user.friendsOf,
+                verified: user.verified
             }
         })
         res.status(200).json({ message: "Retrieved all users", safeUsersData })
@@ -272,11 +274,16 @@ export const updateProfilePicture = asyncHandler(async (req: MulterRequest, res:
         return;
     }
 
+    const compressedBuffer = await sharp(req.file.buffer)
+        .resize({ width: 512 })
+        .toFormat('webp', { quality: 80 })
+        .toBuffer();
+
     const filePath = `${user.username}-profile-picture`;
 
     const { data, error } = await supabase.storage
       .from("profile-pictures")
-      .upload(filePath, req.file.buffer, { contentType: req.file.mimetype, upsert: true });
+      .upload(filePath, compressedBuffer, { contentType: req.file.mimetype, upsert: true });
 
     if (error) {
       throw new Error(`Supabase upload error: ${error.message}`);

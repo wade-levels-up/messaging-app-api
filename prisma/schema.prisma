@@ -32,7 +32,7 @@ model User {
 model Conversation {
   id          Int       @id @default(autoincrement())
   users       User[]    @relation("UserConversations")
-  name        String?
+  name        String    @unique
   groupChat   Boolean   @default(false)
   messages    Message[]
   lastMessage String?

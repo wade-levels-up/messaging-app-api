@@ -55,6 +55,7 @@ Note: 👮🏼 Protected Routes require a valid JWT in the `Authorization` heade
 | POST   | /signin                                  | Signs a user into their account and returns a JWT to the browser                                                                                                        |
 | POST   | /conversations                           | 👮🏼 Protected: Creates a new conversation between the logged in user and another user                                                                                    |
 | POST   | /conversations/:conversation_id/messages | 👮🏼 Protected: Creates a new message within a specific conversation from a logged in user                                                                                |
+| POST   | /conversations//group_conversation       | 👮🏼‍♀️ Protected: Create a new group conversation                                                                                                                           |
 | GET    | /verify-user?token=...                   | Account email verification - Verifies a user's email address using the token sent to their email.                                                                       |
 | GET    | /users                                   | Retrieves an array of all the users as objects, containing username, profile picture, bio, who they are friends of, if they are verified and their join date.           |
 | GET    | /users/:username                         | Retrieves a specific users data for purpose of displaying a users public profile                                                                                        |
@@ -156,6 +157,35 @@ Authorization: Bearer 'your-jwt-token'
   "sender": "JohnDoe",
   "recipient": "JaneDoe",
   "openingMessage": "Hi Jane!"
+}
+```
+
+**Example Response:**
+
+```json
+{
+  "message": "New conversation started between JohnDoe and JaneDoe"
+}
+```
+
+---
+
+**Method:** POST
+**Endpoint:** `/conversations/group_conversation`
+
+**Description:**  
+Create a new group conversation. Requires a name for the conversation as well as a string of at least 3 usernames and no more than 5 usernames. Users must exist in the database.
+
+**Request Headers:**
+
+Authorization: Bearer 'your-jwt-token'
+
+**Request Body:**
+
+```json
+{
+  "name": "NewConversationName",
+  "users": "JaneDoe, JohnDoe, JimDoe"
 }
 ```
 

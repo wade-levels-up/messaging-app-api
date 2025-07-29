@@ -108,18 +108,49 @@ export const createConversation = [
 
 interface NewGroupConversationBody {
     name: string;
+    users: string;
 }
 
 export const createGroupConversation = asyncHandler(async (req: Request<{}, {}, NewGroupConversationBody>, res: Response) => {
     try {
-        const { name, ...users } = req.body
+        const name = req.body.name;
+
+        if (!req.body.users) {
+            res.status(400).json({ message: "Users field is required" });
+            return;
+        }
+
+        const users = req.body.users.split(",").map(user => user.trim()); 
+
+        if (users.length <=2 || users.length > 5) {
+            res.status(200).json({ message: "Can't create group chat. Minimum of 3 users and maximum of 5 users allowed."});
+            return;
+        }
+
+        const foundUsers = await prisma.user.findMany({
+            where: { username: { in: users } },
+            select: { username: true }
+        });
+
+        if (foundUsers.length !== users.length) {
+            res.status(400).json({ message: `Can't create group chat. Couldn't find all users.` });
+            return;
+        }
+
+ 
         await prisma.conversation.create({
             data: {
-                name: name
+                name: name,
+                groupChat: true,
+                users: {
+                    connect: foundUsers.map(user => ({ username: user.username }))
+                }
             }
         })
-    } catch {
 
+        res.status(200).json({ message: `New group chat - ${name} - created.`})
+    } catch(error) {
+        handleError(error)
     }
 })
 

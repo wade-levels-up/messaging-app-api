@@ -79,6 +79,7 @@ export const createConversation = [
 
         await prisma.conversation.create({
             data: {
+                name: `${sender} and ${recipient}`,
                 users: {
                     connect: [
                         { username: sender},
@@ -104,6 +105,23 @@ export const createConversation = [
     }    
 })
 ]
+
+interface NewGroupConversationBody {
+    name: string;
+}
+
+export const createGroupConversation = asyncHandler(async (req: Request<{}, {}, NewGroupConversationBody>, res: Response) => {
+    try {
+        const { name, ...users } = req.body
+        await prisma.conversation.create({
+            data: {
+                name: name
+            }
+        })
+    } catch {
+
+    }
+})
 
 interface NewMessageBody {
   sender: string;

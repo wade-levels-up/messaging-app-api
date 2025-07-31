@@ -9,7 +9,20 @@ export const getUserConversations = asyncHandler(async (req: Request, res: Respo
     try {
         const user = await prisma.user.findUnique({
             where: { id: (req as any).userId },
-            include: { conversations: { include: { users: { select: { username: true } } } } } // Only return usernames
+            include: { conversations: { where: { groupChat: false }, include: { users: { select: { username: true } } } } }
+        });
+
+        res.status(200).json({ message: "Conversations retrieved", conversations: user?.conversations});
+    } catch(error) {
+        handleError(error);
+    }    
+})
+
+export const getUserGroupConversations = asyncHandler(async (req: Request, res: Response) => {
+    try {
+        const user = await prisma.user.findUnique({
+            where: { id: (req as any).userId },
+            include: { conversations: { where: { groupChat: true }, select: { name: true } } }
         });
 
         res.status(200).json({ message: "Conversations retrieved", conversations: user?.conversations});

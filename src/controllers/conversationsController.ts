@@ -4,6 +4,7 @@ import asyncHandler from 'express-async-handler';
 import prisma from '../utils/prismaClient';
 import { validateContent } from '../validators/validators';
 import { handleValidationError } from '../utils/handleValidationError';
+import { User } from '@prisma/client';
 
 export const getUserConversations = asyncHandler(async (req: Request, res: Response) => {
     try {
@@ -121,22 +122,24 @@ export const createConversation = [
 
 interface NewGroupConversationBody {
     name: string;
-    users: string;
+    users: User[];
+    creator: string;
 }
 
 export const createGroupConversation = asyncHandler(async (req: Request<{}, {}, NewGroupConversationBody>, res: Response) => {
     try {
-        const name = req.body.name;
+        const { name, creator } = req.body;
 
         if (!req.body.users) {
             res.status(400).json({ message: "Users field is required" });
             return;
         }
 
-        const users = req.body.users.split(",").map(user => user.trim()); 
+        let users = req.body.users.map(user => user.username); 
+        users.push(creator);
 
         if (users.length <=2 || users.length > 5) {
-            res.status(200).json({ message: "Can't create group chat. Minimum of 3 users and maximum of 5 users allowed."});
+            res.status(400).json({ message: "Can't create group chat. Minimum of 3 users and maximum of 5 users allowed."});
             return;
         }
 
@@ -149,7 +152,6 @@ export const createGroupConversation = asyncHandler(async (req: Request<{}, {}, 
             res.status(400).json({ message: `Can't create group chat. Couldn't find all users.` });
             return;
         }
-
  
         await prisma.conversation.create({
             data: {

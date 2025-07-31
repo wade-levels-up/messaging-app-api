@@ -175,7 +175,7 @@ Authorization: Bearer 'your-jwt-token'
 **Endpoint:** `/conversations/group_conversation`
 
 **Description:**  
-Create a new group conversation. Requires a name for the conversation as well as a string of at least 3 usernames and no more than 5 usernames. Users must exist in the database.
+Create a new group conversation. Requires a name for the conversation as well as a string of at least 3 usernames and no more than 5 usernames. Users must exist in the database. Automatically adds the username of the logged in user.
 
 **Request Headers:**
 
@@ -186,7 +186,8 @@ Authorization: Bearer 'your-jwt-token'
 ```json
 {
   "name": "NewConversationName",
-  "users": "JaneDoe, JohnDoe, JimDoe"
+  "users": "JaneDoe, JohnDoe, JimDoe",
+  "creator": "<Logged-In-Users-Name>"
 }
 ```
 
@@ -194,7 +195,7 @@ Authorization: Bearer 'your-jwt-token'
 
 ```json
 {
-  "message": "New conversation started between JohnDoe and JaneDoe"
+  "message": "New group chat - <Group Chat Name> - created."
 }
 ```
 

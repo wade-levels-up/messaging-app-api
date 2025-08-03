@@ -131,6 +131,7 @@ export const createGroupConversation = [
     asyncHandler(async (req: Request<{}, {}, NewGroupConversationBody>, res: Response) => {
     try {
         handleValidationError(req)
+
         const { name, creator } = req.body;
 
         if (!req.body.users) {
@@ -155,6 +156,7 @@ export const createGroupConversation = [
             res.status(400).json({ message: `Can't create group chat. Couldn't find all users.` });
             return;
         }
+
  
         await prisma.conversation.create({
             data: {

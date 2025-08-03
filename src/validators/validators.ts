@@ -1,4 +1,5 @@
 import { body, ValidationChain } from "express-validator";
+import prisma from "../utils/prismaClient";
 
 export const validateEmail: ValidationChain[] = [
   body("email")
@@ -49,7 +50,20 @@ export const validateGroupChat: ValidationChain[] = [
   .withMessage("Name must be between 1 and 16 characters long")
   .matches(/^[^<>]*$/)
   .withMessage("Text cannot contain < or > characters")
-  ,
+  .custom(async (value) => {
+    const existingConversation = await prisma.conversation.findFirst({
+      where: { 
+        name: value,
+        groupChat: true 
+      }
+    });
+    
+    if (existingConversation) {
+      throw new Error('A group chat with this name already exists. Please choose another name.');
+    }
+    
+    return true;
+  }),
   body("creator")
   .trim()
   .isLength({ min: 2, max: 24 })

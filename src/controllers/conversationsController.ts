@@ -19,6 +19,31 @@ export const getUserConversations = asyncHandler(async (req: Request, res: Respo
     }    
 })
 
+export const getUserConversationByRecipientName = asyncHandler(async (req: Request, res: Response) => {
+    try {
+        const recipientName = req.params.recipient_name;
+
+        const user = await prisma.user.findUnique({
+            where: { id: (req as any).userId },
+            include: { 
+                conversations: { 
+                    where: { 
+                        AND: [
+                            { groupChat: false },
+                            { users: { some: { username: recipientName } } }
+                        ]
+                    }, 
+                    include: { users: { select: { username: true } } } 
+                } 
+            }
+        });
+
+        res.status(200).json({ message: `Conversation with ${recipientName} retrieved`, conversations: user?.conversations});
+    } catch(error) {
+        handleError(error);
+    }    
+})
+
 export const getUserGroupConversations = asyncHandler(async (req: Request, res: Response) => {
     try {
         const user = await prisma.user.findUnique({
@@ -79,6 +104,7 @@ export const createConversation = [
 
         const existingConversation = await prisma.conversation.findFirst({
             where: {
+                groupChat: false,
                 AND: [
                     { users: { some: { username: sender } } },
                     { users: { some: { username: recipient } } }

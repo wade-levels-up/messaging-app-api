@@ -56,6 +56,20 @@ export const getUserGroupConversations = asyncHandler(async (req: Request, res: 
         handleError(error);
     }    
 })
+ 
+export const getUserGroupConversationByName = asyncHandler(async (req: Request, res: Response) => {
+    try {
+        const conversation = await prisma.conversation.findUnique({
+            where: { name: req.params.name, AND: {groupChat: true} }
+        });
+
+        const conversations = conversation ? [conversation] : [];
+
+        res.status(200).json({ message: "Group conversation retrieved", conversations: conversations});
+    } catch(error) {
+        handleError(error);
+    }    
+})
 
 export const getConversationMessages = asyncHandler(async (req: Request, res: Response) => {
     try {

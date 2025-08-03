@@ -41,3 +41,20 @@ export const validateContent: ValidationChain[] = [
   .matches(/^[^<>]*$/)
   .withMessage("Text cannot contain < or > characters")
 ]
+
+export const validateGroupChat: ValidationChain[] = [
+  body("name")
+  .trim()
+  .isLength({ min: 1, max: 16 })
+  .withMessage("Name must be between 1 and 16 characters long")
+  .matches(/^[^<>]*$/)
+  .withMessage("Text cannot contain < or > characters")
+  ,
+  body("creator")
+  .trim()
+  .isLength({ min: 2, max: 24 })
+  .withMessage("Creator's name must be between 2 and 24 characters")
+  .matches(/^\S+$/)
+  .withMessage("Creator's name cannot contain spaces")
+  .escape()
+]

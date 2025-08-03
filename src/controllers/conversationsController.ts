@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { handleError } from '../utils/handleError';
 import asyncHandler from 'express-async-handler';
 import prisma from '../utils/prismaClient';
-import { validateContent } from '../validators/validators';
+import { validateContent, validateGroupChat } from '../validators/validators';
 import { handleValidationError } from '../utils/handleValidationError';
 import { User } from '@prisma/client';
 
@@ -126,8 +126,11 @@ interface NewGroupConversationBody {
     creator: string;
 }
 
-export const createGroupConversation = asyncHandler(async (req: Request<{}, {}, NewGroupConversationBody>, res: Response) => {
+export const createGroupConversation = [
+    validateGroupChat,
+    asyncHandler(async (req: Request<{}, {}, NewGroupConversationBody>, res: Response) => {
     try {
+        handleValidationError(req)
         const { name, creator } = req.body;
 
         if (!req.body.users) {
@@ -168,6 +171,7 @@ export const createGroupConversation = asyncHandler(async (req: Request<{}, {}, 
         handleError(error)
     }
 })
+]
 
 interface NewMessageBody {
   sender: string;

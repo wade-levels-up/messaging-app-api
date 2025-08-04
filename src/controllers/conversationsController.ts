@@ -61,7 +61,7 @@ export const getUserGroupConversationByName = asyncHandler(async (req: Request, 
     try {
         const conversation = await prisma.conversation.findUnique({
             where: { name: req.params.name, AND: { groupChat: true } },
-            include: { users: { select: { username: true }}}
+            include: { users: { select: { username: true, profile_picture_path: true }}}
         });
 
         const conversations = conversation ? [conversation] : [];

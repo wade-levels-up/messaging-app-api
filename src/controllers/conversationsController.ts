@@ -46,12 +46,12 @@ export const getUserConversationByRecipientName = asyncHandler(async (req: Reque
 
 export const getUserGroupConversations = asyncHandler(async (req: Request, res: Response) => {
     try {
-        const user = await prisma.user.findUnique({
-            where: { id: (req as any).userId },
-            include: { conversations: { where: { groupChat: true }, select: { name: true } } }
+        const conversations = await prisma.conversation.findMany({
+            where: { groupChat: true, users: { some: { id: (req as any).userId }}},
+            include: { users: { select: { username: true, profile_picture_path: true }}}
         });
 
-        res.status(200).json({ message: "Conversations retrieved", conversations: user?.conversations});
+        res.status(200).json({ message: "Group conversations retrieved", conversations});
     } catch(error) {
         handleError(error);
     }    
@@ -60,13 +60,13 @@ export const getUserGroupConversations = asyncHandler(async (req: Request, res: 
 export const getUserGroupConversationByName = asyncHandler(async (req: Request, res: Response) => {
     try {
         const conversation = await prisma.conversation.findUnique({
-            where: { name: req.params.name, AND: { groupChat: true } },
+            where: { name: req.params.name, groupChat: true, users: { some: { id: (req as any).userId }} },
             include: { users: { select: { username: true, profile_picture_path: true }}}
         });
 
         const conversations = conversation ? [conversation] : [];
 
-        res.status(200).json({ message: "Group conversation retrieved", conversations: conversations});
+        res.status(200).json({ message: "Group conversation retrieved", conversations});
     } catch(error) {
         handleError(error);
     }    

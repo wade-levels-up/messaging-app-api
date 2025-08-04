@@ -62,7 +62,7 @@ Note: 👮🏼 Protected Routes require a valid JWT in the `Authorization` heade
 | GET    | /users/me                                | 👮🏼 Protected: Retrieves the logged in user's data, including a list of who they are friends of.                                                                         |
 | GET    | /conversations                           | 👮🏼 Protected: Retrieves the conversations of the logged in user                                                                                                         |
 | GET    | /conversations/:recipient_name           | 👮🏼 Protected: Retrieves a conversation between the logged in user and the recipient                                                                                     |
-| GET    | /conversations/group_conversation        | 👮🏼 Protected: Retrieves the group conversations of the logged in user                                                                                                   |
+| GET    | /conversations/group_conversation        | 👮🏼 Protected: Retrieves the group conversations of the logged in user as well as the usernames of the participants and their profile picture URL path                   |
 | GET    | /conversations/:conversation_id/messages | 👮🏼 Protected: Retrieves a specific conversation's messages for the id in the route parameter :conversation_id.                                                          |
 | GET    | /friends                                 | 👮🏼 Protected: Retrieves an array of users that are friends of the logged in user. The friend objects contain their username, profile picture path, bio and joined date. |
 | GET    | /users/:username/friends                 | Retrieves a specific users friends as an array of usernames                                                                                                             |
@@ -358,7 +358,7 @@ Authorization: Bearer 'your-jwt-token'
 **Endpoint:** `/conversations/group_conversation`
 
 **Description:**  
-Retrieves the group conversations of the logged in user
+Retrieves the group conversations of the logged in user as well as the usernames of the participants and their profile picture URL path
 
 **Request Headers:**
 
@@ -368,7 +368,7 @@ Authorization: Bearer 'your-jwt-token'
 
 ```json
 {
-  "message": "Conversations retrieved",
+  "message": "Group conversations retrieved",
   "conversations": []
 }
 ```

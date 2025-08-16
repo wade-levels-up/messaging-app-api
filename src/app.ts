@@ -55,6 +55,15 @@ app.use(compression());
 
 // Routes
 
+// For ALB health checks
+app.get('/', (req, res) => {
+  res.status(200).json({ 
+    message: 'Budding Messenger API is healthy',
+    timestamp: new Date().toISOString(),
+    status: 'ok'
+  });
+});
+
 app.use('/signup', signUpRouter);
 app.use('/signin', signInRouter);
 app.use('/verify-user', verifyUserRouter);
@@ -91,6 +100,8 @@ io.on('connection', (socket) => {
     createMessage(io, socket, data);
   });
 });
+
+
 
 // Catch missed routes
 app.use((req, res) => {

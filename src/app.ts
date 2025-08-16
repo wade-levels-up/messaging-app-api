@@ -22,8 +22,7 @@ declare module 'socket.io' {
   }
 }
 
-const allowedOrigins = [
-  process.env.CLIENT,                   
+const allowedOrigins = [                
   'https://www.buddingmessenger.com',
   'https://buddingmessenger.com',
 ]
@@ -32,7 +31,8 @@ const app = express();
 const server = createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: process.env.CLIENT,
+    origin: allowedOrigins, 
+    credentials: true
   }
 });
 

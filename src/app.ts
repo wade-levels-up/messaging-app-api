@@ -22,7 +22,11 @@ declare module 'socket.io' {
   }
 }
 
-const allowedOrigins = [process.env.CLIENT];
+const allowedOrigins = [
+  process.env.CLIENT,                   
+  'https://www.buddingmessenger.com',
+  'https://buddingmessenger.com',
+]
 
 const app = express();
 const server = createServer(app);
@@ -41,7 +45,8 @@ app.use(cors({
     } else {
       callback(new Error('Not allowed by CORS'));
     }
-  }
+  },
+  credentials: true
 }));
 
 app.use(express.json());

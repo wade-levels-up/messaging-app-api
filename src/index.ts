@@ -1,8 +1,7 @@
-import server from './app';
-import prisma from './utils/prismaClient';
 import dotenv from 'dotenv';
 dotenv.config();
-import app from './app';
+import server from './app';
+import prisma from './utils/prismaClient';
 
 // Run The Server
 
